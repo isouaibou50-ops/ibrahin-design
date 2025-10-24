@@ -23,6 +23,11 @@ import star_dull_icon from "./star_dull_icon.svg";
 import header_headphone_image from "./header_headphone_image.png";
 import header_playstation_image from "./header_playstation_image.png";
 import header_macbook_image from "./header_macbook_image.png";
+
+import header_african_attire_image from "./header_african_attire_image.jpg";
+import header_tailor_workshop_image from "./header_tailor_workshop_image.jpg";
+import header_traditional_fabric_image from "./header_traditional_fabric_image.jpg";
+
 import macbook_image from "./macbook_image.png";
 import bose_headphone_image from "./bose_headphone_image.png";
 import apple_earphone_image from "./apple_earphone_image.png";
@@ -52,6 +57,9 @@ export const assets = {
   search_icon,
   user_icon,
   cart_icon,
+  header_african_attire_image,
+  header_tailor_workshop_image,
+  header_traditional_fabric_image,
   add_icon,
   order_icon,
   instagram_icon,
