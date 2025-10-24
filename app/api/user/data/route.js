@@ -2,7 +2,7 @@ import connectDB from "@/config/db";
 import User from "@/models/User";
 import  { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { useId } from "react";
+
 
 
 export async function GET(request) {
@@ -10,7 +10,7 @@ export async function GET(request) {
         const { userId } = getAuth(request);
 
         await connectDB()
-        const user = await User.findById(useId)
+        const user = await User.findById(userId)
 
         if (!user) {
             return NextResponse.json({ succes: false, message: "User Not Found"})
