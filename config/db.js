@@ -16,7 +16,7 @@ async function connectDB() {
         const opts = {
             bufferCommands:false
         }
-        cached.promise = (await mongoose.connect(`${process.env.MONGODB_URI}/ibrahimdesign`, opts)).isObjectIdOrHexString((mongoose) => {
+        cached.promise = (await mongoose.connect(`${process.env.MONGODB_URI}/ibrahimdesign`, opts)).then((mongoose) => {
             return mongoose;
         })
     }
