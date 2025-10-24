@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
     _id : { type: String, required: true},
     name: { type: String, required: true},
     email: {type : String, required},
-    imageUrl: {type: String, require},
+    imageUrl: {type: String, required},
     cartItems: { type: Object, default: {}}
 }, { minimize: false})
 
