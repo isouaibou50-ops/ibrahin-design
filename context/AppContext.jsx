@@ -29,26 +29,61 @@ export const AppContextProvider = (props) => {
         setProducts(productsDummyData)
     }
 
+
+
+
+
+    // const fetchUserData = async () => {
+    //     try {
+    //         if (isLoaded && user) { // ✅ ensure user is available
+    //             const role = user.publicMetadata?.role || "buyer"; // ✅ safe optional chaining
+    //             setIsSeller(role === "seller");
+
+    //             const token = await getToken();
+
+    //             const {data} = await axios.get('/api/user/data', { headers: { Authorization: `Bearer ${token}`}})
+
+    //             if (data.success) {
+    //                 setUserData(data.user)
+    //             } else {
+    //                 toast.error(data.message)
+    //             }
+    //         }
+    //     } catch (error) {
+    //         toast.error(error);
+    //     }
+    // };
+
+
     const fetchUserData = async () => {
-        try {
-            if (isLoaded && user) { // ✅ ensure user is available
-                const role = user.publicMetadata?.role || "buyer"; // ✅ safe optional chaining
-                setIsSeller(role === "seller");
+  try {
+    if (isLoaded && user) {
+      const token = await getToken();
 
-                const token = await getToken();
+      if (!token) {
+        console.warn("No token yet, skipping fetch");
+        return;
+      }
 
-                const {data} = await axios.get('/api/user/data', { headers: { Authorization: `Bearer ${token}`}})
+      const role = user.publicMetadata?.role || "buyer";
+      setIsSeller(role === "seller");
 
-                if (data.success) {
-                    setUserData(data.user)
-                } else {
-                    toast.error(data.message)
-                }
-            }
-        } catch (error) {
-            toast.error(error);
-        }
-    };
+      const { data } = await axios.get("/api/user/data", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (data.success) {
+        setUserData(data.user);
+      } else {
+        toast.error(data.message);
+      }
+    }
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error.message);
+  }
+};
+
+
 
     const addToCart = async (itemId) => {
         let cartData = structuredClone(cartItems);
