@@ -4,12 +4,17 @@ import { assets, BagIcon, BoxIcon, CartIcon, HomeIcon} from "@/assets/assets";
 import Link from "next/link"
 import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
-import { useClerk, UserButton } from "@clerk/nextjs";
+import { useClerk, UserButton, useUser } from "@clerk/nextjs";
 
 const Navbar = () => {
 
   const { isSeller, router, user } = useAppContext();
   const {openSignIn} = useClerk();
+
+  const { isLoaded, isSignedIn } = useUser(); // ✅ Clerk's reliable auth state
+
+  // ⛔ Prevent hydration mismatch by waiting for Clerk to load
+  if (!isLoaded) return null;
 
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-32 py-3 border-b border-gray-300 text-gray-700">
@@ -60,9 +65,11 @@ const Navbar = () => {
         {user? <>
           <UserButton> 
             <UserButton.MenuItems>
+              <UserButton.Action label="Home" labelIcon={<HomeIcon />} onClick={() => router.push('/')}/>
+              <UserButton.Action label="Products" labelIcon={<BoxIcon />} onClick={() => router.push('/all-products')}/>
               <UserButton.Action label="Cart" labelIcon={<CartIcon />} onClick={() => router.push('/cart')}/>
-              <UserButton.Action label="My Orders" labelIcon={<BagIcon />} onClick={() => router.push('/my-orders')}/>
-            </UserButton.MenuItems>
+              <UserButton.Action label="My Orders" labelIcon={<BagIcon />} onClick={() => router.push('/my-orders')}/>        
+            </UserButton.MenuItems> 
             
           </UserButton>
         </>: <button onClick={() => openSignIn({})} className="flex items-center gap-2 hover:text-gray-900 transition">
