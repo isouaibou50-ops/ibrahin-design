@@ -24,9 +24,11 @@ const Orders = () => {
                 setLoading(false)
             } else {
                 toast.error(data.message)
+                setLoading(false)
             }
         } catch (error) {
             toast.error(error.message)
+            setLoading(false)
         }
     }
 
