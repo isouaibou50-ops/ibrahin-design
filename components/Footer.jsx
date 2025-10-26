@@ -80,11 +80,11 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 text-[#C5A34A] mt-0.5 flex-shrink-0" />
                 <span className="text-sm text-gray-400 leading-relaxed">
-                  Shop 5, Market House
+                  Green Market, Protea House, 7, 
                   <br />
                   Cape Town City Centre
                   <br />
-                  Cape Town, 8005
+                  Cape Town, 8001
                 </span>
               </li>
               <li className="flex items-center gap-2">
