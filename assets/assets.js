@@ -44,6 +44,9 @@ import md_controller_image from "./md_controller_image.png";
 import sm_controller_image from "./sm_controller_image.png";
 import jbl_soundbox_image from "./jbl_soundbox_image.png";
 import boy_with_laptop_image from "./boy_with_laptop_image.png";
+import tailor_craft_image from "./tailor_craft_image.jpg";
+import african_attire_image from "./african_attire_image.webp"
+import traditional_fabric_image from "./traditional_fabric_image.jpg"
 import checkmark from "./checkmark.png";
 import product_details_page_apple_earphone_image1 from "./product_details_page_apple_earphone_image1.png";
 import product_details_page_apple_earphone_image2 from "./product_details_page_apple_earphone_image2.png";
@@ -52,6 +55,9 @@ import product_details_page_apple_earphone_image4 from "./product_details_page_a
 import product_details_page_apple_earphone_image5 from "./product_details_page_apple_earphone_image5.png";
 
 export const assets = {
+  traditional_fabric_image,
+  tailor_craft_image,
+  african_attire_image,
   logo,
   search_icon,
   user_icon,

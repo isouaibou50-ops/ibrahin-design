@@ -1,26 +1,35 @@
+"use client";
 import React from "react";
 
 const NewsLetter = () => {
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-2 pt-8 pb-14">
-      <h1 className="md:text-4xl text-2xl font-medium">
-        Subscribe now & get 20% off
+    <section className="flex flex-col items-center justify-center text-center py-16 px-6 bg-gradient-to-b from-amber-50/40 via-white to-amber-50/40 border-t border-amber-100/60">
+      {/* Headline */}
+      <h1 className="text-2xl md:text-4xl font-serif font-semibold text-gray-900 mb-3">
+        Join the Ibrahim Design Circle
       </h1>
-      <p className="md:text-base text-gray-500/80 pb-8">
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry.
+      <p className="text-sm md:text-base text-gray-600 max-w-lg mb-8">
+        Subscribe to receive exclusive tailoring insights, early access to new collections, 
+        and members-only offers — crafted just for you.
       </p>
-      <div className="flex items-center justify-between max-w-2xl w-full md:h-14 h-12">
+
+      {/* Input and Button */}
+      <div className="flex items-center w-full max-w-md md:max-w-2xl border border-amber-200/70 rounded-full overflow-hidden shadow-sm">
         <input
-          className="border border-gray-500/30 rounded-md h-full border-r-0 outline-none w-full rounded-r-none px-3 text-gray-500"
-          type="text"
-          placeholder="Enter your email id"
+          className="flex-1 px-4 py-3 text-sm md:text-base text-gray-700 bg-transparent outline-none placeholder:text-gray-400"
+          type="email"
+          placeholder="Enter your email address"
         />
-        <button className="md:px-12 px-8 h-full text-white bg-orange-600 rounded-md rounded-l-none">
+        <button className="bg-amber-600 hover:bg-amber-700 transition-colors text-white font-medium px-8 md:px-12 py-3 rounded-full">
           Subscribe
         </button>
       </div>
-    </div>
+
+      {/* Subtext */}
+      <p className="text-xs text-gray-400 mt-4">
+        We respect your privacy — unsubscribe anytime.
+      </p>
+    </section>
   );
 };
 

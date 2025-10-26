@@ -1,16 +1,27 @@
-import connectDB from "@/config/db";
+import { currentUser } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+
 import Product from "@/models/Product";
-import {  NextResponse } from "next/server";
+import connectDB from "@/config/db";
 
-export async function GET(request) {
-    try {
-            
-        await connectDB()
+export async function GET() {
+  try {
+    await connectDB();
 
-        const products = await Product.find({})
-        return NextResponse.json({ success: true, products});
+    const user = await currentUser(); // returns null if not logged in
 
-    } catch (error) {
-        return NextResponse.json({ success: false, message: error.message})
+    let products;
+
+    if (user) {
+      // Authenticated user — show all
+      products = await Product.find({});
+    } else {
+      // Unauthenticated user — show limited
+      products = await Product.find({ isPublic: true });
     }
+
+    return NextResponse.json({ success: true, products });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message });
+  }
 }
