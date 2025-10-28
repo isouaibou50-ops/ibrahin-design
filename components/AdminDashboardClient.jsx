@@ -1,3 +1,4 @@
+// components/AdminDashboardClient.jsx
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -100,6 +101,12 @@ function CreateProductForm({ onCreated, onClose }) {
       setUploading(true);
       setProgress(0);
       const token = await getToken();
+      if (!token) {
+        toast.error("Authentication failed. Please sign in again.");
+        setUploading(false);
+        return;
+      }
+
       const res = await axios.post("/api/shop-products/manage/create", fd, {
         headers: { Authorization: `Bearer ${token}` },
         onUploadProgress: (ev) => { if (ev.total) setProgress(Math.round((ev.loaded / ev.total) * 100)); }
@@ -113,7 +120,7 @@ function CreateProductForm({ onCreated, onClose }) {
         toast.error(res.data?.message || "Create failed");
       }
     } catch (err) {
-      console.error(err);
+      console.error("CreateProductForm.handleSubmit error:", err, err?.response?.data);
       toast.error(err?.response?.data?.message || err.message || "Create failed");
     } finally {
       setUploading(false);
@@ -187,6 +194,9 @@ function EditProductForm({ product, onUpdated, onClose }) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  // confirmation state for update
+  const [confirmingUpdate, setConfirmingUpdate] = useState(false);
+
   const inputRef = useRef(null);
   const isSeller = isLoaded && user && (user.publicMetadata?.role === "seller" || user.publicMetadata?.role === "admin");
 
@@ -218,10 +228,18 @@ function EditProductForm({ product, onUpdated, onClose }) {
     setPreviews([...existingImages, ...copy].map((f) => (typeof f === "string" ? f : URL.createObjectURL(f))));
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!isSeller) return toast.error("Only sellers/admins can edit products");
-    if (!name.trim() || !price) return toast.error("Name and price required");
+  // actual submit that performs the PATCH
+  async function doSubmit() {
+    if (!isSeller) {
+      toast.error("Only sellers/admins can edit products");
+      setConfirmingUpdate(false);
+      return;
+    }
+    if (!name.trim() || !price) {
+      toast.error("Name and price required");
+      setConfirmingUpdate(false);
+      return;
+    }
 
     const fd = new FormData();
     fd.append("id", product._id);
@@ -237,7 +255,15 @@ function EditProductForm({ product, onUpdated, onClose }) {
       setUploading(true);
       setProgress(0);
       const token = await getToken();
-      const res = await axios.patch("/api/shop-products/manage/update", fd, {
+      if (!token) {
+        toast.error("Authentication failed. Please sign in again.");
+        setUploading(false);
+        setConfirmingUpdate(false);
+        return;
+      }
+
+      // PATCH to /api/shop-products/manage/[id] preferred; fallback handled at server if needed
+      const res = await axios.patch(`/api/shop-products/manage/${product._id}`, fd, {
         headers: { Authorization: `Bearer ${token}` },
         onUploadProgress: (ev) => { if (ev.total) setProgress(Math.round((ev.loaded / ev.total) * 100)); }
       });
@@ -250,60 +276,98 @@ function EditProductForm({ product, onUpdated, onClose }) {
         toast.error(res.data?.message || "Update failed");
       }
     } catch (err) {
-      console.error(err);
-      toast.error(err?.response?.data?.message || err.message || "Update failed");
+      // fallback: some setups still expect POST to /manage/update — try that if patch fails with 404/405
+      console.error("Edit PATCH error:", err?.response?.status, err);
+      try {
+        if (err?.response?.status === 404 || err?.response?.status === 405) {
+          const token = await getToken();
+          const res2 = await axios.post("/api/shop-products/manage/update", fd, { headers: { Authorization: `Bearer ${token}` } });
+          if (res2.data?.success) {
+            toast.success("Product updated (fallback)");
+            onUpdated && onUpdated(res2.data.product);
+            onClose && onClose();
+          } else {
+            toast.error(res2.data?.message || "Update failed (fallback)");
+          }
+        } else {
+          toast.error(err?.response?.data?.message || err.message || "Update failed");
+        }
+      } catch (err2) {
+        console.error("Edit fallback error:", err2);
+        toast.error(err2?.response?.data?.message || err2.message || "Update failed");
+      }
     } finally {
       setUploading(false);
+      setConfirmingUpdate(false);
     }
+  }
+
+  // initial click triggers confirmation modal
+  function handleRequestSubmit(e) {
+    e.preventDefault();
+    setConfirmingUpdate(true);
   }
 
   if (!isLoaded) return null;
   if (!user || !isSeller) return <div className="p-4">Sign in as seller/admin to edit products.</div>;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <input required value={name} onChange={(e) => setName(e.target.value)} className="border rounded px-3 py-2" placeholder="Product name" />
-        <select value={category} onChange={(e) => setCategory(e.target.value)} className="border rounded px-3 py-2">
-          {["Uncategorized", "Men", "Women", "Children", "Accessories", "Traditional", "Custom Orders"].map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
-        <input required value={price} onChange={(e) => setPrice(e.target.value)} className="border rounded px-3 py-2" placeholder="Price" inputMode="decimal" />
-        <input value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} className="border rounded px-3 py-2" placeholder="Offer (optional)" inputMode="decimal" />
-      </div>
-
-      <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Short description" className="border rounded px-3 py-2 w-full h-28" />
-
-      <div className="text-sm text-gray-500">Existing images (tap ✕ to remove)</div>
-      <div className="flex gap-3 flex-wrap mt-2">
-        {previews.length === 0 ? <div className="text-sm text-gray-400">No images</div> : previews.map((src, i) => (
-          <div key={i} className="relative w-24 h-24 rounded overflow-hidden border">
-            <img src={src} alt={`img-${i}`} className="object-cover w-full h-full" />
-            {i < existingImages.length ? (
-              <button type="button" onClick={() => removeExistingImage(i)} className="absolute top-1 right-1 bg-white/80 rounded-full p-1 text-xs">✕</button>
-            ) : (
-              <button type="button" onClick={() => removeNewFile(i - existingImages.length)} className="absolute top-1 right-1 bg-white/80 rounded-full p-1 text-xs">✕</button>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <div className="border-dashed border-2 border-gray-200 rounded p-3">
-        <div className="flex items-center justify-between mb-2">
-          <div><p className="text-sm font-medium">Add/Replace images (max total 4)</p></div>
-          <div><button type="button" onClick={() => inputRef.current?.click()} style={{ background: ACCENT }} className="text-white px-3 py-1 rounded">Add</button></div>
+    <>
+      <form onSubmit={handleRequestSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <input required value={name} onChange={(e) => setName(e.target.value)} className="border rounded px-3 py-2" placeholder="Product name" />
+          <select value={category} onChange={(e) => setCategory(e.target.value)} className="border rounded px-3 py-2">
+            {["Uncategorized", "Men", "Women", "Children", "Accessories", "Traditional", "Custom Orders"].map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <input required value={price} onChange={(e) => setPrice(e.target.value)} className="border rounded px-3 py-2" placeholder="Price" inputMode="decimal" />
+          <input value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} className="border rounded px-3 py-2" placeholder="Offer (optional)" inputMode="decimal" />
         </div>
-        <input ref={inputRef} multiple accept="image/*" type="file" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
-      </div>
 
-      {uploading && <div className="w-full bg-gray-100 rounded h-2 overflow-hidden"><div style={{ width: `${progress}%`, background: ACCENT }} className="h-full transition-all" /></div>}
+        <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Short description" className="border rounded px-3 py-2 w-full h-28" />
 
-      <div className="flex items-center gap-3">
-        <button type="submit" disabled={uploading} style={{ background: ACCENT }} className="px-4 py-2 rounded text-white">
-          {uploading ? `Updating ${progress}%` : "Save changes"}
-        </button>
-        <button type="button" onClick={onClose} className="px-3 py-2 rounded border">Cancel</button>
-      </div>
-    </form>
+        <div className="text-sm text-gray-500">Existing images (tap ✕ to remove)</div>
+        <div className="flex gap-3 flex-wrap mt-2">
+          {previews.length === 0 ? <div className="text-sm text-gray-400">No images</div> : previews.map((src, i) => (
+            <div key={i} className="relative w-24 h-24 rounded overflow-hidden border">
+              <img src={src} alt={`img-${i}`} className="object-cover w-full h-full" />
+              {i < existingImages.length ? (
+                <button type="button" onClick={() => removeExistingImage(i)} className="absolute top-1 right-1 bg-white/80 rounded-full p-1 text-xs">✕</button>
+              ) : (
+                <button type="button" onClick={() => removeNewFile(i - existingImages.length)} className="absolute top-1 right-1 bg-white/80 rounded-full p-1 text-xs">✕</button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="border-dashed border-2 border-gray-200 rounded p-3">
+          <div className="flex items-center justify-between mb-2">
+            <div><p className="text-sm font-medium">Add/Replace images (max total 4)</p></div>
+            <div><button type="button" onClick={() => inputRef.current?.click()} style={{ background: ACCENT }} className="text-white px-3 py-1 rounded">Add</button></div>
+          </div>
+          <input ref={inputRef} multiple accept="image/*" type="file" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
+        </div>
+
+        {uploading && <div className="w-full bg-gray-100 rounded h-2 overflow-hidden"><div style={{ width: `${progress}%`, background: ACCENT }} className="h-full transition-all" /></div>}
+
+        <div className="flex items-center gap-3">
+          <button type="submit" disabled={uploading} style={{ background: ACCENT }} className="px-4 py-2 rounded text-white">
+            {uploading ? `Updating ${progress}%` : "Save changes"}
+          </button>
+          <button type="button" onClick={onClose} className="px-3 py-2 rounded border">Cancel</button>
+        </div>
+      </form>
+
+      {/* Confirm update modal */}
+      <Modal open={confirmingUpdate} onClose={() => setConfirmingUpdate(false)} title="Confirm update">
+        <div className="space-y-4">
+          <p className="text-sm text-gray-700">Save changes to <strong>{product?.name}</strong>?</p>
+          <div className="flex items-center gap-3">
+            <button onClick={doSubmit} style={{ background: ACCENT }} className="px-4 py-2 rounded text-white">Yes, save</button>
+            <button onClick={() => setConfirmingUpdate(false)} className="px-3 py-2 rounded border">Cancel</button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }
 
@@ -391,7 +455,7 @@ export default function AdminDashboardClient({ initialSearchParams }) {
         toast.error(data?.message || "Failed to load products");
       }
     } catch (err) {
-      console.error(err);
+      console.error("fetchProducts error:", err);
       toast.error(err?.response?.data?.message || err.message || "Failed to load products");
     } finally {
       setLoading(false);
@@ -400,8 +464,7 @@ export default function AdminDashboardClient({ initialSearchParams }) {
 
   function handleCreated(newProd) {
     setProducts((s) => [newProd, ...s]);
-    setPage(1);
-    fetchProducts(1);
+    etMeta((m) => ({ ...m, total: (m.total || 0) + 1 }));
   }
 
   function openView(p) { setViewProduct(p); }
@@ -411,11 +474,33 @@ export default function AdminDashboardClient({ initialSearchParams }) {
   function openDelete(p) { setDeleteProduct(p); }
   function closeDelete() { setDeleteProduct(null); }
 
+  // Delete with fallback to old endpoint
   async function confirmDelete() {
     if (!deleteProduct) return;
     try {
       const token = await getToken();
-      const { data } = await axios.post("/api/shop-products/manage/delete", { id: deleteProduct._id }, { headers: { Authorization: `Bearer ${token}` }});
+      if (!token) {
+        toast.error("Authentication failed. Please sign in.");
+        return;
+      }
+
+      // Try RESTful DELETE first
+      let res;
+      try {
+        res = await axios.delete(`/api/shop-products/manage/${deleteProduct._id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (err) {
+        // If server doesn't support DELETE endpoint, fallback to legacy POST delete
+        console.warn("DELETE endpoint failed, attempting fallback POST /manage/delete", err?.response?.status);
+        if (err?.response?.status === 404 || err?.response?.status === 405 || err?.response?.status === 400) {
+          res = await axios.post("/api/shop-products/manage/delete", { id: deleteProduct._id }, { headers: { Authorization: `Bearer ${token}` }});
+        } else {
+          throw err;
+        }
+      }
+
+      const data = res?.data;
       if (data?.success) {
         toast.success("Deleted");
         setProducts((s) => s.filter((x) => x._id !== deleteProduct._id));
@@ -424,7 +509,7 @@ export default function AdminDashboardClient({ initialSearchParams }) {
         toast.error(data?.message || "Delete failed");
       }
     } catch (err) {
-      console.error(err);
+      console.error("confirmDelete error:", err);
       toast.error(err?.response?.data?.message || err.message || "Delete failed");
     }
   }
@@ -443,7 +528,7 @@ export default function AdminDashboardClient({ initialSearchParams }) {
     setPage((p) => p + 1);
   }
 
-  // client-side role check (UI only) — server already enforces auth
+  // client-side role check (UI only) — server should enforce auth
   const role = user?.publicMetadata?.role || user?.public_metadata?.role || null;
   const canEdit = role === "seller" || role === "admin";
 

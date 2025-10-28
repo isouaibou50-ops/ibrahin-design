@@ -132,15 +132,25 @@ const Navbar = () => {
                 Contact
               </Link>
 
-              {isSeller && (
+              {isSeller ? (
                 <button
                   onClick={() => {
-                    router.push("/seller");
+                    router.push("/admin-dashboard");
                     setMenuOpen(false);
                   }}
                   className="px-6 py-3 text-left border-t border-gray-100 hover:bg-[#C5A34A]/10 transition"
                 >
-                  Seller Dashboard
+                  Admin Dashboard
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    router.push("/dashboard");
+                    setMenuOpen(false);
+                  }}
+                  className="px-6 py-3 text-left border-t border-gray-100 hover:bg-[#C5A34A]/10 transition"
+                >
+                  Dashboard
                 </button>
               )}
 

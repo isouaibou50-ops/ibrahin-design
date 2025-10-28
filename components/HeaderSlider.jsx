@@ -45,7 +45,7 @@ const HeaderSlider = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % sliderData.length);
-    }, 6000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [sliderData.length]);
 
@@ -76,7 +76,7 @@ const HeaderSlider = () => {
               <p className="text-[#C5A34A] font-medium mb-3 text-sm sm:text-base tracking-wide">
                 {slide.offer}
               </p>
-              <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-5 leading-snug drop-shadow-md">
+              <h1 className="text-lg sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-5 leading-snug drop-shadow-md">
                 {slide.title}
               </h1>
 
@@ -92,7 +92,7 @@ const HeaderSlider = () => {
                 {/* ✅ Secondary button */}
                 <Link
                   href={slide.path2}
-                  className="flex items-center justify-center gap-2 px-7 py-2.5 font-medium border border-white/40 text-white hover:bg-white/10 rounded-full transition group"
+                  className="hidden md:flex items-center justify-center gap-2 px-7 py-2.5 font-medium border border-white/40 text-white hover:bg-white/10 rounded-full transition group"
                 >
                   {slide.buttonText2}
                   <Image

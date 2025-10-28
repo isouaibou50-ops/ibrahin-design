@@ -59,7 +59,7 @@ const FeaturedProduct = () => {
   };
 
   return (
-    <section className="mt-20 md:mt-28 bg-gradient-to-b from-white to-[#faf8f0] py-16 relative overflow-hidden">
+    <section className="mt-8 md:mt-16 bg-gradient-to-b from-white to-[#faf8f0] py-16 relative overflow-hidden">
       {/* Decorative golden glow */}
       <div
         className="absolute top-0 left-0 w-72 h-72 bg-[#C5A34A]/10 rounded-full blur-3xl"
