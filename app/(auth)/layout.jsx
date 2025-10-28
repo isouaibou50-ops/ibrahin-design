@@ -19,7 +19,7 @@ export default function Layout({ children }) {
     >
       {/* ✅ Optional background image / gradient */}
       <Image
-        src={assets.header_african_attire_image} // Add your light theme background in public/images/
+        src={assets.tailor_craft_image} // Add your light theme background in public/images/
         alt="Background"
         fill
         priority
