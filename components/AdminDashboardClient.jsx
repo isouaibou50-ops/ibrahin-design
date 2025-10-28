@@ -230,77 +230,70 @@ function EditProductForm({ product, onUpdated, onClose }) {
 
   // actual submit that performs the PATCH
   async function doSubmit() {
-    if (!isSeller) {
-      toast.error("Only sellers/admins can edit products");
-      setConfirmingUpdate(false);
-      return;
-    }
-    if (!name.trim() || !price) {
-      toast.error("Name and price required");
-      setConfirmingUpdate(false);
-      return;
-    }
+  if (!isSeller) {
+    toast.error("Only sellers/admins can edit products");
+    setConfirmingUpdate(false);
+    return;
+  }
+  if (!name.trim() || !price) {
+    toast.error("Name and price required");
+    setConfirmingUpdate(false);
+    return;
+  }
 
-    const fd = new FormData();
-    fd.append("id", product._id);
-    fd.append("name", name);
-    fd.append("description", description);
-    fd.append("category", category);
-    fd.append("price", price);
-    if (offerPrice) fd.append("offerPrice", offerPrice);
-    fd.append("existingImages", JSON.stringify(existingImages));
-    newFiles.forEach((f) => fd.append("images", f));
+  const fd = new FormData();
+  fd.append("id", product._id);
+  fd.append("name", name);
+  fd.append("description", description);
+  fd.append("category", category);
+  fd.append("price", price);
+  if (offerPrice) fd.append("offerPrice", offerPrice);
+  fd.append("existingImages", JSON.stringify(existingImages));
+  newFiles.forEach((f) => fd.append("images", f));
 
-    try {
-      setUploading(true);
-      setProgress(0);
-      const token = await getToken();
-      if (!token) {
-        toast.error("Authentication failed. Please sign in again.");
-        setUploading(false);
-        setConfirmingUpdate(false);
-        return;
-      }
-
-      // PATCH to /api/shop-products/manage/[id] preferred; fallback handled at server if needed
-      const res = await axios.patch(`/api/shop-products/manage/${product._id}`, fd, {
-        headers: { Authorization: `Bearer ${token}` },
-        onUploadProgress: (ev) => { if (ev.total) setProgress(Math.round((ev.loaded / ev.total) * 100)); }
-      });
-
-      if (res.data?.success) {
-        toast.success("Product updated");
-        onUpdated && onUpdated(res.data.product);
-        onClose && onClose();
-      } else {
-        toast.error(res.data?.message || "Update failed");
-      }
-    } catch (err) {
-      // fallback: some setups still expect POST to /manage/update — try that if patch fails with 404/405
-      console.error("Edit PATCH error:", err?.response?.status, err);
-      try {
-        if (err?.response?.status === 404 || err?.response?.status === 405) {
-          const token = await getToken();
-          const res2 = await axios.post("/api/shop-products/manage/update", fd, { headers: { Authorization: `Bearer ${token}` } });
-          if (res2.data?.success) {
-            toast.success("Product updated (fallback)");
-            onUpdated && onUpdated(res2.data.product);
-            onClose && onClose();
-          } else {
-            toast.error(res2.data?.message || "Update failed (fallback)");
-          }
-        } else {
-          toast.error(err?.response?.data?.message || err.message || "Update failed");
-        }
-      } catch (err2) {
-        console.error("Edit fallback error:", err2);
-        toast.error(err2?.response?.data?.message || err2.message || "Update failed");
-      }
-    } finally {
+  try {
+    setUploading(true);
+    setProgress(0);
+    const token = await getToken();
+    if (!token) {
+      toast.error("Authentication failed. Please sign in again.");
       setUploading(false);
       setConfirmingUpdate(false);
+      return;
     }
+
+    // ✅ Explicitly tell axios it's multipart/form-data
+    const res = await axios.patch(
+      `/api/shop-products/manage/${product._id}`,
+      fd,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (ev) => {
+          if (ev.total)
+            setProgress(Math.round((ev.loaded / ev.total) * 100));
+        },
+      }
+    );
+
+    if (res.data?.success) {
+      toast.success("Product updated");
+      onUpdated && onUpdated(res.data.product);
+      onClose && onClose();
+    } else {
+      toast.error(res.data?.message || "Update failed");
+    }
+  } catch (err) {
+    console.error("Edit PATCH error:", err?.response?.status, err);
+    toast.error(err?.response?.data?.message || err.message || "Update failed");
+  } finally {
+    setUploading(false);
+    setConfirmingUpdate(false);
   }
+}
+
 
   // initial click triggers confirmation modal
   function handleRequestSubmit(e) {

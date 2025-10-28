@@ -1,18 +1,18 @@
-import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary";
+import { getAuth } from "@clerk/nextjs/server";
+import authRole from "@/lib/authRole";
+import { NextResponse } from "next/server";
 import connectDB from "@/config/db";
 import ShopProduct from "@/models/ShopProduct";
-import authRole from "@/lib/authRole";
 
-// Configure Cloudinary
+// --- Cloudinary config ---
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Helper
+// --- Helpers ---
 function slugifySimple(str) {
   return String(str || "")
     .toLowerCase()
@@ -24,96 +24,138 @@ function slugifySimple(str) {
     .slice(0, 140);
 }
 
-// PATCH — Update a product
-export async function PATCH(request, { params }) {
-  try {
-    const { userId } = getAuth(request);
-    if (!userId) {
-      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
-
-    const { canUpdate, role } = await authRole(userId);
-    if (!canUpdate) {
-      return NextResponse.json({ success: false, message: "Forbidden - insufficient role" }, { status: 403 });
-    }
-
-    await connectDB();
-    const body = await request.json();
-    const product = await ShopProduct.findById(params.id);
-
-    if (!product) {
-      return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 });
-    }
-
-    // Optional ownership restriction (if you want sellers to only edit their own)
-    if (role === "seller" && product.userId !== userId) {
-      return NextResponse.json({ success: false, message: "Forbidden - cannot modify others' product" }, { status: 403 });
-    }
-
-    // Update fields
-    if (body.name) product.name = body.name;
-    if (body.description) product.description = body.description;
-    if (body.category) product.category = body.category;
-    if (body.price !== undefined) product.price = Number(body.price);
-    if (body.offerPrice !== undefined) product.offerPrice = Number(body.offerPrice);
-    if (Array.isArray(body.image)) product.image = body.image.slice(0, 4);
-    if (body.isPublic !== undefined) product.isPublic = !!body.isPublic;
-
-    // Auto-update slug if name changed
-    if (body.name) {
-      const baseSlug = slugifySimple(body.name);
-      const timestampSuffix = Date.now().toString().slice(-6);
-      product.slug = `${baseSlug}-${timestampSuffix}`;
-    }
-
-    await product.save();
-
-    return NextResponse.json({ success: true, product });
-  } catch (err) {
-    console.error("PATCH /api/shop-products/manage/[id] error:", err);
-    return NextResponse.json({ success: false, message: err?.message || "Server error" }, { status: 500 });
-  }
+async function uploadBufferToCloudinary(buffer, publicIdBase = undefined) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { resource_type: "image", folder: "shop_products", public_id: publicIdBase },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+    stream.end(buffer);
+  });
 }
 
-// DELETE — Only admin
-export async function DELETE(request, { params }) {
+// --- PATCH (Update ShopProduct) ---
+export async function PATCH(request, { params }) {
   try {
+    const { id } = params;
+
+    // Clerk auth
     const { userId } = getAuth(request);
     if (!userId) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
 
-    const { role } = await authRole(userId);
-    if (role !== "admin") {
-      return NextResponse.json({ success: false, message: "Only admin can delete products" }, { status: 403 });
+    // role validation: seller/staff/admin can update
+    const { canUpdate } = await authRole(userId);
+    if (!canUpdate) {
+      return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
     }
 
-    await connectDB();
-    const product = await ShopProduct.findById(params.id);
+    // content type
+    const contentType = (request.headers.get("content-type") || "").toLowerCase();
 
-    if (!product) {
+    let name = "";
+    let description = "";
+    let category = "Uncategorized";
+    let price = null;
+    let offerPrice = null;
+    let existingImages = [];
+    let newFiles = [];
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await request.formData();
+      name = String(formData.get("name") || "").trim();
+      description = String(formData.get("description") || "").trim();
+      category = String(formData.get("category") || "Uncategorized").trim();
+      const priceRaw = formData.get("price");
+      const offerRaw = formData.get("offerPrice");
+
+      price = priceRaw !== null && priceRaw !== undefined ? Number(priceRaw) : null;
+      offerPrice = offerRaw ? Number(offerRaw) : null;
+
+      // existing images array
+      const existing = formData.get("existingImages");
+      if (existing) {
+        try {
+          const parsed = JSON.parse(existing);
+          if (Array.isArray(parsed)) existingImages = parsed;
+        } catch {
+          existingImages = String(existing).split(",").map((s) => s.trim()).filter(Boolean);
+        }
+      }
+
+      newFiles = formData.getAll("images").filter(Boolean);
+    } else {
+      const body = await request.json();
+      name = String(body.name || "").trim();
+      description = String(body.description || "").trim();
+      category = String(body.category || "Uncategorized").trim();
+      price = body.price !== undefined ? Number(body.price) : null;
+      offerPrice = body.offerPrice !== undefined ? Number(body.offerPrice) : null;
+      existingImages = Array.isArray(body.existingImages) ? body.existingImages : [];
+    }
+
+    // --- validate ---
+    if (!id) return NextResponse.json({ success: false, message: "Missing ID" }, { status: 400 });
+    if (!name) return NextResponse.json({ success: false, message: "Name required" }, { status: 400 });
+    if (price === null || Number.isNaN(price))
+      return NextResponse.json({ success: false, message: "Price must be a number" }, { status: 400 });
+
+    // --- connect DB ---
+    await connectDB();
+    const existing = await ShopProduct.findById(id);
+    if (!existing) {
       return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 });
     }
 
-    // Optional: remove from Cloudinary if you stored URLs
-    if (Array.isArray(product.image)) {
-      for (const url of product.image) {
+    // --- Handle new uploads ---
+    let finalImageUrls = Array.isArray(existingImages) ? existingImages.slice(0, 4) : [];
+
+    if (newFiles && newFiles.length > 0) {
+      if (newFiles.length > 4) {
+        return NextResponse.json({ success: false, message: "Maximum 4 images allowed" }, { status: 400 });
+      }
+
+      const uploaded = [];
+      for (let i = 0; i < newFiles.length; i++) {
         try {
-          const publicId = url.split("/shop_products/")[1]?.split(".")[0];
-          if (publicId) {
-            await cloudinary.uploader.destroy(`shop_products/${publicId}`);
-          }
+          const file = newFiles[i];
+          const buffer = Buffer.from(await file.arrayBuffer());
+          const publicIdBase = `${slugifySimple(name)}-${Date.now().toString().slice(-6)}-${i}`;
+          const res = await uploadBufferToCloudinary(buffer, publicIdBase);
+          uploaded.push(res.secure_url);
         } catch (err) {
-          console.warn("⚠️ Cloudinary delete error:", err.message);
+          console.error("Cloudinary upload error:", err);
+          return NextResponse.json({ success: false, message: "Image upload failed" }, { status: 500 });
         }
       }
+      finalImageUrls = [...finalImageUrls, ...uploaded].slice(0, 4);
     }
 
-    await product.deleteOne();
+    // --- update document ---
+    existing.name = name;
+    existing.description = description;
+    existing.category = category;
+    existing.price = price;
+    existing.offerPrice = offerPrice || null;
+    existing.image = finalImageUrls;
+    existing.slug = slugifySimple(name);
+    existing.metadata = {
+      ...existing.metadata,
+      updatedAt: new Date(),
+    };
 
-    return NextResponse.json({ success: true, message: "Product deleted successfully" });
+    await existing.save();
+
+    return NextResponse.json({ success: true, product: existing });
   } catch (err) {
-    console.error("DELETE /api/shop-products/manage/[id] error:", err);
-    return NextResponse.json({ success: false, message: err?.message || "Server error" }, { status: 500 });
+    console.error("PATCH /api/shop-products/manage/[id] error:", err);
+    return NextResponse.json(
+      { success: false, message: err?.message || "Server error" },
+      { status: 500 }
+    );
   }
 }
