@@ -40,7 +40,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8 text-gray-800 font-medium">
+        <div className="hidden lg:flex items-center gap-8 text-gray-800 font-medium">
           <Link href="/" className="hover:text-[#C5A34A] transition">Home</Link>
           <Link href="/all-shop-products" className="hover:text-[#C5A34A] transition">Shop</Link>
           <Link href="/about" className="hover:text-[#C5A34A] transition">About</Link>
@@ -85,7 +85,7 @@ const Navbar = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-gray-800 z-[60]"
+          className="lg:hidden text-gray-800 z-[60]"
         >
           {menuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>

@@ -20,7 +20,7 @@ export default function ShopProductsPreview({ limit = 8 }) {
   const visibleProducts = products.slice(0, limit);
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-8">
+    <section className="max-w-6xl mx-auto px-4 pt-20">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
         <div>
