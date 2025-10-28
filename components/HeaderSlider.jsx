@@ -1,18 +1,21 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
-import { assets } from "@/assets/assets";
 import Image from "next/image";
+import Link from "next/link";
+import { assets } from "@/assets/assets";
 
 const HeaderSlider = () => {
   const sliderData = [
     {
       id: 1,
-      title:
-        "Discover the Art of African Tailoring — Crafted for You by Ibrahim Design.",
+      title: "Discover the Art of African Tailoring — Crafted for You by Ibrahim Design.",
       offer: "Exclusive Custom Orders Open Now!",
       buttonText1: "Design Yours",
       buttonText2: "Explore Styles",
       imgSrc: assets.header_african_attire_image,
+      path1: "/client-dashboard",
+      path2: "/all-shop-products",
     },
     {
       id: 2,
@@ -21,20 +24,24 @@ const HeaderSlider = () => {
       buttonText1: "View Collection",
       buttonText2: "Contact Us",
       imgSrc: assets.header_tailor_workshop_image,
+      path1: "/all-shop-products",
+      path2: "/contact",
     },
     {
       id: 3,
-      title:
-        "Wear Your Heritage with Pride — Bespoke Designs for Every Occasion.",
+      title: "Wear Your Heritage with Pride — Bespoke Designs for Every Occasion.",
       offer: "From Concept to Creation — We Bring Your Vision to Life.",
       buttonText1: "Create Custom Order",
       buttonText2: "Learn More",
       imgSrc: assets.header_traditional_fabric_image,
+      path1: "/client-dashboard",
+      path2: "/about",
     },
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Auto-slide every 6 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % sliderData.length);
@@ -52,10 +59,7 @@ const HeaderSlider = () => {
         }}
       >
         {sliderData.map((slide) => (
-          <div
-            key={slide.id}
-            className="relative min-w-full flex items-center justify-center"
-          >
+          <div key={slide.id} className="relative min-w-full flex items-center justify-center">
             {/* Background */}
             <div
               className="w-full h-[40vh] sm:h-[55vh] md:h-[65vh] lg:h-[70vh] bg-cover bg-center rounded-2xl"
@@ -72,22 +76,31 @@ const HeaderSlider = () => {
               <p className="text-[#C5A34A] font-medium mb-3 text-sm sm:text-base tracking-wide">
                 {slide.offer}
               </p>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-5 leading-snug drop-shadow-md">
+              <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-5 leading-snug drop-shadow-md">
                 {slide.title}
               </h1>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-                <button className="px-8 py-2.5 bg-[#C5A34A] hover:bg-[#b08d3e] text-white font-medium rounded-full transition">
+                {/* ✅ Primary button */}
+                <Link
+                  href={slide.path1}
+                  className="px-8 py-2.5 bg-[#C5A34A] hover:bg-[#b08d3e] text-white font-medium rounded-full transition shadow-sm hover:shadow-md active:scale-[0.98]"
+                >
                   {slide.buttonText1}
-                </button>
-                <button className="group flex items-center justify-center gap-2 px-7 py-2.5 font-medium border border-white/40 text-white hover:bg-white/10 rounded-full transition">
+                </Link>
+
+                {/* ✅ Secondary button */}
+                <Link
+                  href={slide.path2}
+                  className="flex items-center justify-center gap-2 px-7 py-2.5 font-medium border border-white/40 text-white hover:bg-white/10 rounded-full transition group"
+                >
                   {slide.buttonText2}
                   <Image
-                    className="group-hover:translate-x-1 transition"
                     src={assets.arrow_icon}
                     alt="arrow_icon"
+                    className="group-hover:translate-x-1 transition"
                   />
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -97,9 +110,10 @@ const HeaderSlider = () => {
       {/* Dots */}
       <div className="absolute bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
         {sliderData.map((_, index) => (
-          <div
+          <button
             key={index}
             onClick={() => setCurrentSlide(index)}
+            aria-label={`Go to slide ${index + 1}`}
             className={`h-2.5 w-2.5 rounded-full cursor-pointer transition-all duration-300 ${
               currentSlide === index
                 ? "bg-[#C5A34A] scale-110"

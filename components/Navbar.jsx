@@ -42,7 +42,7 @@ const Navbar = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8 text-gray-800 font-medium">
           <Link href="/" className="hover:text-[#C5A34A] transition">Home</Link>
-          <Link href="/all-products" className="hover:text-[#C5A34A] transition">Shop</Link>
+          <Link href="/all-shop-products" className="hover:text-[#C5A34A] transition">Shop</Link>
           <Link href="/about" className="hover:text-[#C5A34A] transition">About</Link>
           <Link href="/contact" className="hover:text-[#C5A34A] transition">Contact</Link>
 
@@ -59,7 +59,7 @@ const Navbar = () => {
             <UserButton>
               <UserButton.MenuItems>
                 <UserButton.Action label="Home" labelIcon={<HomeIcon />} onClick={() => router.push("/")} />
-                <UserButton.Action label="Products" labelIcon={<BoxIcon />} onClick={() => router.push("/all-products")} />
+                <UserButton.Action label="Products" labelIcon={<BoxIcon />} onClick={() => router.push("/all-shop-products")} />
                 <UserButton.Action label="Cart" labelIcon={<CartIcon />} onClick={() => router.push("/cart")} />
                 <UserButton.Action label="My Orders" labelIcon={<BagIcon />} onClick={() => router.push("/my-orders")} />
               </UserButton.MenuItems>
@@ -104,7 +104,7 @@ const Navbar = () => {
                 Home
               </Link>
               <Link
-                href="/all-products"
+                href="/all-shop-products"
                 onClick={() => setMenuOpen(false)}
                 className="px-6 py-3 hover:bg-[#C5A34A]/10 transition"
               >
@@ -202,7 +202,7 @@ const Navbar = () => {
                   Contact
                 </Link>
                 <Link
-                  href="/all-products"
+                  href="/all-shop-products"
                   onClick={() => setOverlayOpen(false)}
                   className="text-lg text-gray-700 hover:text-[#C5A34A] transition"
                 >
