@@ -46,12 +46,19 @@ const Navbar = () => {
           <Link href="/about" className="hover:text-[#C5A34A] transition">About</Link>
           <Link href="/contact" className="hover:text-[#C5A34A] transition">Contact</Link>
 
-          {isSeller && (
+          {isSeller ? (
             <button
-              onClick={() => router.push("/seller")}
+              onClick={() => router.push("/admin-dashboard")}
               className="text-xs border border-[#C5A34A] text-[#C5A34A] px-4 py-1.5 rounded-full hover:bg-[#C5A34A] hover:text-white transition"
             >
               Seller Dashboard
+            </button>
+          ) : (
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="text-xs border border-[#C5A34A] text-[#C5A34A] px-4 py-1.5 rounded-full hover:bg-[#C5A34A] hover:text-white transition"
+            >
+              Dashboard
             </button>
           )}
 
