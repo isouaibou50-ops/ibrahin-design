@@ -406,7 +406,6 @@ export default function AdminDashboardClient({ initialSearchParams }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { getToken } = useAuth();
-  const { openSignIn } = useClerk();
   const { user, isLoaded } = useUser();
 
   const [products, setProducts] = useState([]);
@@ -457,7 +456,7 @@ export default function AdminDashboardClient({ initialSearchParams }) {
 
   function handleCreated(newProd) {
     setProducts((s) => [newProd, ...s]);
-    etMeta((m) => ({ ...m, total: (m.total || 0) + 1 }));
+    setMeta((m) => ({ ...m, total: (m.total || 0) + 1 }));
   }
 
   function openView(p) { setViewProduct(p); }
@@ -495,8 +494,9 @@ export default function AdminDashboardClient({ initialSearchParams }) {
 
       const data = res?.data;
       if (data?.success) {
-        toast.success("Deleted");
-        setProducts((s) => s.filter((x) => x._id !== deleteProduct._id));
+        toast.dismiss();
+        toast.success("Product Deleted");
+        setProducts((prev) => prev.filter((p) => p._id !== deleteProduct._id));
         closeDelete();
       } else {
         toast.error(data?.message || "Delete failed");

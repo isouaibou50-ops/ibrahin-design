@@ -46,12 +46,12 @@ export default function RootLayout({ children }) {
           className={`antialiased ${inter.variable} ${playfair.variable}`}
           style={{ backgroundColor: theme.background, color: theme.text }}
         >
-          <Toaster
+          {/* <Toaster
             toastOptions={{
               style: { background: theme.accent, color: theme.background },
               success: { iconTheme: { primary: theme.accent, secondary: theme.background } },
             }}
-          />
+          /> */}
               {children}
         </body>
       </html>
