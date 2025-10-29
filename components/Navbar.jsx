@@ -12,26 +12,36 @@ const Navbar = () => {
   const { router } = useAppContext();
   const { openSignIn } = useClerk();
   const { user, isLoaded } = useUser();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  if (!isLoaded) return null;
-
-  // ✅ Check metadata for admin/seller/staff role
-  const role = user?.publicMetadata?.role;
-  const isPrivileged =
-    role === "admin" || role === "seller" || role === "staff";
-  const dashboardRoute = isPrivileged ? "/admin-dashboard" : "/dashboard";
-
-  // Add shadow on scroll for subtle elevation
+  // ✅ Always call hooks unconditionally
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // ✅ Show lightweight placeholder until Clerk loads
+  if (!isLoaded) {
+    return (
+      <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100 py-3 px-4">
+        <div className="animate-pulse flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-gray-200 rounded-full" />
+            <div className="h-4 w-24 bg-gray-200 rounded" />
+          </div>
+          <div className="h-6 w-6 bg-gray-200 rounded" />
+        </div>
+      </nav>
+    );
+  }
+
+  const role = user?.publicMetadata?.role;
+  const isPrivileged = role === "admin" || role === "seller" || role === "staff";
+  const dashboardRoute = isPrivileged ? "/admin-dashboard" : "/dashboard";
 
   return (
     <nav
