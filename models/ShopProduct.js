@@ -19,7 +19,7 @@ const shopProductSchema = new mongoose.Schema(
 
 // index to speed public listing queries
 shopProductSchema.index({ isPublic: 1, createdAt: -1 });
-shopProductSchema.index({ slug: 1 });
+
 
 const ShopProduct = mongoose.models.ShopProduct || mongoose.model("ShopProduct", shopProductSchema);
 export default ShopProduct;

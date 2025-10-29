@@ -36,6 +36,7 @@ export async function GET(request) {
       description: 1,
       image: 1,
       offerPrice: 1,
+      price: 1,
       category: 1,
       createdAt: 1,
       _id: 1,

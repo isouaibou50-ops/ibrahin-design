@@ -54,10 +54,12 @@ export async function PATCH(request, { params }) {
 
         // ✅ Ensure numbers are properly converted
         if (key === "price" || key === "offerPrice") {
-          updates[key] = value ? Number(value) : null;
+          const num = Number(value);
+          updates[key] = value === "" || isNaN(num) ? undefined : num;
         } else {
           updates[key] = value;
         }
+
       }
 
       files = formData.getAll("images").filter(Boolean);
@@ -65,9 +67,21 @@ export async function PATCH(request, { params }) {
       const body = await request.json();
       updates = {
         ...body,
-        price: body.price !== undefined ? Number(body.price) : undefined,
-        offerPrice: body.offerPrice !== undefined ? Number(body.offerPrice) : undefined,
+          price:
+      body.price === "" || body.price === undefined || isNaN(Number(body.price))
+        ? undefined
+        : Number(body.price),
+      offerPrice:
+      body.offerPrice === "" || body.offerPrice === undefined || isNaN(Number(body.offerPrice))
+        ? undefined
+        : Number(body.offerPrice),
       };
+    }
+
+    // ✅ Get current product to preserve old images
+    const existing = await ShopProduct.findById(id);
+    if (!existing) {
+      return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 });
     }
 
     // ✅ Handle image uploads (optional)
@@ -81,7 +95,15 @@ export async function PATCH(request, { params }) {
         const result = await uploadBufferToCloudinary(buffer, publicIdBase);
         uploaded.push(result.secure_url);
       }
-      updates.image = uploaded;
+
+      // ✅ Merge existing + newly uploaded images safely
+      const oldImages = Array.isArray(existing.image)
+        ? existing.image
+        : existing.image
+        ? [existing.image]
+        : [];
+      
+      updates.image = [...oldImages, ...uploaded];
     }
 
     // ✅ Update the product

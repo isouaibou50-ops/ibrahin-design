@@ -16,7 +16,7 @@ export default async function AllShopProductsPage() {
   const categories = await ShopProduct.distinct("category");
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <main className="min-h-screen bg-white">
       <section className="max-w-7xl mx-auto px-4 py-8">
         <header className="mb-6 text-center">
           <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-white">

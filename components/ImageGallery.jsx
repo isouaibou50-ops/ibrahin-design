@@ -16,7 +16,7 @@ export default function ImageGallery({ images = [] }) {
 
   return (
     <div className="w-full">
-      <div className="relative w-full h-[56vw] sm:h-[40vh] md:h-[50vh] lg:h-[48vh] rounded-lg overflow-hidden bg-gray-50">
+      <div className="relative w-full h-[80vw] sm:h-[70vh] md:h-[70vh] lg:h-[80h] rounded-lg overflow-hidden bg-gray-50">
         <Image src={images[index]} alt={`product-${index}`} fill style={{ objectFit: "cover" }} priority={index === 0} />
       </div>
 

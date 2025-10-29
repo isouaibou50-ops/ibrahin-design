@@ -183,35 +183,57 @@ function EditProductForm({ product, onUpdated, onClose }) {
   const { getToken } = useAuth();
   const { user, isLoaded } = useUser();
 
+  // Ensure numbers become strings for controlled inputs
   const [name, setName] = useState(product?.name || "");
   const [description, setDescription] = useState(product?.description || "");
   const [category, setCategory] = useState(product?.category || "Uncategorized");
-  const [price, setPrice] = useState(product?.price ?? "");
-  const [offerPrice, setOfferPrice] = useState(product?.offerPrice ?? "");
+  const [price, setPrice] = useState(
+    product?.price !== undefined && product?.price !== null ? String(product.price) : ""
+  );
+  const [offerPrice, setOfferPrice] = useState(
+    product?.offerPrice !== undefined && product?.offerPrice !== null ? String(product.offerPrice) : ""
+  );
+
   const [existingImages, setExistingImages] = useState(product?.image || []);
   const [newFiles, setNewFiles] = useState([]);
   const [previews, setPreviews] = useState(product?.image || []);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-
-  // confirmation state for update
   const [confirmingUpdate, setConfirmingUpdate] = useState(false);
 
-  const inputRef = useRef(null);
-  const isSeller = isLoaded && user && (user.publicMetadata?.role === "seller" || user.publicMetadata?.role === "admin");
+  
 
+  const inputRef = useRef(null);
+  const isSeller =
+    isLoaded &&
+    user &&
+    (user.publicMetadata?.role === "seller" || user.publicMetadata?.role === "admin");
+
+  // 🧹 Clean object URLs on unmount
   useEffect(() => {
     return () => previews.forEach((p) => {
-      try { URL.revokeObjectURL(p); } catch (e) {}
+      try {
+        if (typeof p !== "string") URL.revokeObjectURL(p);
+      } catch {}
     });
+    
   }, [previews]);
 
+  
+
+  // ✅ Fix: allow multiple new files and merge correctly
   function handleFiles(selected) {
     const arr = Array.from(selected || []);
-    const allowed = 4 - existingImages.length;
+    const allowed = Math.max(0, 4 - (existingImages.length + newFiles.length));
     const take = arr.slice(0, allowed);
-    setNewFiles((prev) => [...prev, ...take].slice(0, 4 - existingImages.length));
-    setPreviews([...existingImages, ...newFiles, ...take].map((f) => (typeof f === "string" ? f : URL.createObjectURL(f))));
+
+    const updatedNewFiles = [...newFiles, ...take];
+    const allPreviews = [...existingImages, ...updatedNewFiles].map((f) =>
+      typeof f === "string" ? f : URL.createObjectURL(f)
+    );
+
+    setNewFiles(updatedNewFiles);
+    setPreviews(allPreviews);
   }
 
   function removeExistingImage(index) {
@@ -228,135 +250,229 @@ function EditProductForm({ product, onUpdated, onClose }) {
     setPreviews([...existingImages, ...copy].map((f) => (typeof f === "string" ? f : URL.createObjectURL(f))));
   }
 
-  // actual submit that performs the PATCH
+  // 🧩 Submit (PATCH)
   async function doSubmit() {
-  if (!isSeller) {
-    toast.error("Only sellers/admins can edit products");
-    setConfirmingUpdate(false);
-    return;
-  }
-  if (!name.trim() || !price) {
-    toast.error("Name and price required");
-    setConfirmingUpdate(false);
-    return;
-  }
-
-  const fd = new FormData();
-  fd.append("id", product._id);
-  fd.append("name", name);
-  fd.append("description", description);
-  fd.append("category", category);
-  fd.append("price", price);
-  if (offerPrice) fd.append("offerPrice", offerPrice);
-  fd.append("existingImages", JSON.stringify(existingImages));
-  newFiles.forEach((f) => fd.append("images", f));
-
-  try {
-    setUploading(true);
-    setProgress(0);
-    const token = await getToken();
-    if (!token) {
-      toast.error("Authentication failed. Please sign in again.");
-      setUploading(false);
+    if (!isSeller) {
+      toast.error("Only sellers/admins can edit products");
+      setConfirmingUpdate(false);
+      return;
+    }
+    if (!name.trim() || !price) {
+      toast.error("Name and price required");
       setConfirmingUpdate(false);
       return;
     }
 
-    // ✅ Explicitly tell axios it's multipart/form-data
-    const res = await axios.patch(
-      `/api/shop-products/manage/${product._id}`,
-      fd,
-      {
+    const fd = new FormData();
+    fd.append("id", product._id);
+    fd.append("name", name);
+    fd.append("description", description);
+    fd.append("category", category);
+    fd.append("price", price ? Number(price) : "");
+    fd.append("offerPrice", offerPrice ? Number(offerPrice) : "");
+
+
+    // ✅ Fix: always send remaining existing images to backend to keep them
+    fd.append("existingImages", JSON.stringify(existingImages));
+
+    // ✅ Append new files (if any)
+    newFiles.forEach((f) => fd.append("images", f));
+
+    try {
+      setUploading(true);
+      setProgress(0);
+      const token = await getToken();
+      if (!token) {
+        toast.error("Authentication failed. Please sign in again.");
+        setUploading(false);
+        setConfirmingUpdate(false);
+        return;
+      }
+
+      const res = await axios.patch(`/api/shop-products/manage/${product._id}`, fd, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
         onUploadProgress: (ev) => {
-          if (ev.total)
-            setProgress(Math.round((ev.loaded / ev.total) * 100));
+          if (ev.total) setProgress(Math.round((ev.loaded / ev.total) * 100));
         },
+      });
+
+      if (res.data?.success) {
+        toast.dismiss();
+        toast.success("Product updated");
+        onUpdated && onUpdated(res.data.product);
+        onClose && onClose();
+      } else {
+        toast.error(res.data?.message || "Update failed");
       }
-    );
-
-    if (res.data?.success) {
-      toast.success("Product updated");
-      onUpdated && onUpdated(res.data.product);
-      onClose && onClose();
-    } else {
-      toast.error(res.data?.message || "Update failed");
+    } catch (err) {
+      console.error("Edit PATCH error:", err);
+      toast.error(err?.response?.data?.message || err.message || "Update failed");
+    } finally {
+      setUploading(false);
+      setConfirmingUpdate(false);
     }
-  } catch (err) {
-    console.error("Edit PATCH error:", err?.response?.status, err);
-    toast.error(err?.response?.data?.message || err.message || "Update failed");
-  } finally {
-    setUploading(false);
-    setConfirmingUpdate(false);
   }
-}
 
-
-  // initial click triggers confirmation modal
   function handleRequestSubmit(e) {
     e.preventDefault();
     setConfirmingUpdate(true);
   }
 
   if (!isLoaded) return null;
-  if (!user || !isSeller) return <div className="p-4">Sign in as seller/admin to edit products.</div>;
+  if (!user || !isSeller)
+    return <div className="p-4">Sign in as seller/admin to edit products.</div>;
 
   return (
     <>
       <form onSubmit={handleRequestSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <input required value={name} onChange={(e) => setName(e.target.value)} className="border rounded px-3 py-2" placeholder="Product name" />
-          <select value={category} onChange={(e) => setCategory(e.target.value)} className="border rounded px-3 py-2">
-            {["Uncategorized", "Men", "Women", "Children", "Accessories", "Traditional", "Custom Orders"].map((c) => <option key={c} value={c}>{c}</option>)}
+          <input
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="border rounded px-3 py-2"
+            placeholder="Product name"
+          />
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="border rounded px-3 py-2"
+          >
+            {[
+              "Uncategorized",
+              "Men",
+              "Women",
+              "Children",
+              "Accessories",
+              "Traditional",
+              "Custom Orders",
+            ].map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
           </select>
-          <input required value={price} onChange={(e) => setPrice(e.target.value)} className="border rounded px-3 py-2" placeholder="Price" inputMode="decimal" />
-          <input value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} className="border rounded px-3 py-2" placeholder="Offer (optional)" inputMode="decimal" />
+
+          {/* ✅ Fix controlled numeric fields */}
+          <input
+            required
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="border rounded px-3 py-2"
+            placeholder="Price"
+            inputMode="decimal"
+          />
+          <input
+            value={offerPrice}
+            onChange={(e) => setOfferPrice(e.target.value)}
+            className="border rounded px-3 py-2"
+            placeholder="Offer (optional)"
+            inputMode="decimal"
+          />
         </div>
 
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Short description" className="border rounded px-3 py-2 w-full h-28" />
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Short description"
+          className="border rounded px-3 py-2 w-full h-28"
+        />
 
         <div className="text-sm text-gray-500">Existing images (tap ✕ to remove)</div>
         <div className="flex gap-3 flex-wrap mt-2">
-          {previews.length === 0 ? <div className="text-sm text-gray-400">No images</div> : previews.map((src, i) => (
-            <div key={i} className="relative w-24 h-24 rounded overflow-hidden border">
-              <img src={src} alt={`img-${i}`} className="object-cover w-full h-full" />
-              {i < existingImages.length ? (
-                <button type="button" onClick={() => removeExistingImage(i)} className="absolute top-1 right-1 bg-white/80 rounded-full p-1 text-xs">✕</button>
-              ) : (
-                <button type="button" onClick={() => removeNewFile(i - existingImages.length)} className="absolute top-1 right-1 bg-white/80 rounded-full p-1 text-xs">✕</button>
-              )}
-            </div>
-          ))}
+          {previews.length === 0 ? (
+            <div className="text-sm text-gray-400">No images</div>
+          ) : (
+            previews.map((src, i) => (
+              <div key={i} className="relative w-24 h-24 rounded overflow-hidden border">
+                <img src={src} alt={`img-${i}`} className="object-cover w-full h-full" />
+                {i < existingImages.length ? (
+                  <button
+                    type="button"
+                    onClick={() => removeExistingImage(i)}
+                    className="absolute top-1 right-1 bg-white/80 rounded-full p-1 text-xs"
+                  >
+                    ✕
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => removeNewFile(i - existingImages.length)}
+                    className="absolute top-1 right-1 bg-white/80 rounded-full p-1 text-xs"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            ))
+          )}
         </div>
 
         <div className="border-dashed border-2 border-gray-200 rounded p-3">
           <div className="flex items-center justify-between mb-2">
-            <div><p className="text-sm font-medium">Add/Replace images (max total 4)</p></div>
-            <div><button type="button" onClick={() => inputRef.current?.click()} style={{ background: ACCENT }} className="text-white px-3 py-1 rounded">Add</button></div>
+            <p className="text-sm font-medium">Add/Replace images (max total 4)</p>
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              style={{ background: ACCENT }}
+              className="text-white px-3 py-1 rounded"
+            >
+              Add
+            </button>
           </div>
-          <input ref={inputRef} multiple accept="image/*" type="file" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
+          <input
+            ref={inputRef}
+            multiple
+            accept="image/*"
+            type="file"
+            className="hidden"
+            onChange={(e) => handleFiles(e.target.files)}
+          />
         </div>
 
-        {uploading && <div className="w-full bg-gray-100 rounded h-2 overflow-hidden"><div style={{ width: `${progress}%`, background: ACCENT }} className="h-full transition-all" /></div>}
+        {uploading && (
+          <div className="w-full bg-gray-100 rounded h-2 overflow-hidden">
+            <div
+              style={{ width: `${progress}%`, background: ACCENT }}
+              className="h-full transition-all"
+            />
+          </div>
+        )}
 
         <div className="flex items-center gap-3">
-          <button type="submit" disabled={uploading} style={{ background: ACCENT }} className="px-4 py-2 rounded text-white">
+          <button
+            type="submit"
+            disabled={uploading}
+            style={{ background: ACCENT }}
+            className="px-4 py-2 rounded text-white"
+          >
             {uploading ? `Updating ${progress}%` : "Save changes"}
           </button>
-          <button type="button" onClick={onClose} className="px-3 py-2 rounded border">Cancel</button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-3 py-2 rounded border"
+          >
+            Cancel
+          </button>
         </div>
       </form>
 
-      {/* Confirm update modal */}
       <Modal open={confirmingUpdate} onClose={() => setConfirmingUpdate(false)} title="Confirm update">
         <div className="space-y-4">
-          <p className="text-sm text-gray-700">Save changes to <strong>{product?.name}</strong>?</p>
+          <p className="text-sm text-gray-700">
+            Save changes to <strong>{product?.name}</strong>?
+          </p>
           <div className="flex items-center gap-3">
-            <button onClick={doSubmit} style={{ background: ACCENT }} className="px-4 py-2 rounded text-white">Yes, save</button>
-            <button onClick={() => setConfirmingUpdate(false)} className="px-3 py-2 rounded border">Cancel</button>
+            <button onClick={doSubmit} style={{ background: ACCENT }} className="px-4 py-2 rounded text-white">
+              Yes, save
+            </button>
+            <button onClick={() => setConfirmingUpdate(false)} className="px-3 py-2 rounded border">
+              Cancel
+            </button>
           </div>
         </div>
       </Modal>
