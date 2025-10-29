@@ -59,14 +59,14 @@ const FeaturedProduct = () => {
   };
 
   return (
-    <section className="mt-12 md:mt-20 bg-white py-16 relative overflow-hidden">
-      {/* Decorative accent circles */}
+    <section className="mt-8 md:mt-16 bg-gradient-to-b from-white to-[#faf8f0] py-16 relative overflow-hidden">
+      {/* Decorative golden glow */}
       <div
-        className="absolute top-0 left-0 w-56 h-56 bg-[rgba(197,163,74,0.1)] rounded-full blur-3xl"
+        className="absolute top-0 left-0 w-72 h-72 bg-[#C5A34A]/10 rounded-full blur-3xl"
         aria-hidden
       />
       <div
-        className="absolute bottom-0 right-0 w-56 h-56 bg-[rgba(197,163,74,0.1)] rounded-full blur-3xl"
+        className="absolute bottom-0 right-0 w-72 h-72 bg-[#C5A34A]/10 rounded-full blur-3xl"
         aria-hidden
       />
 
@@ -76,8 +76,7 @@ const FeaturedProduct = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-2xl sm:text-3xl md:text-4xl font-semibold text-theme-text"
-          style={{ color: theme.text }}
+          className="text-3xl md:text-4xl font-serif font-semibold text-gray-900"
         >
           Discover Our Signature Collections
         </motion.h2>
@@ -85,11 +84,12 @@ const FeaturedProduct = () => {
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
           transition={{ duration: 0.6 }}
-          className="mx-auto mt-3 w-20 h-1.5 rounded-full origin-left"
+          className="mx-auto mt-3 w-24 h-[3px] rounded-full origin-left"
           style={{ backgroundColor: theme.accent }}
-        />
-        <p className="mt-3 text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
-          Every collection is a fusion of African heritage and contemporary design — handcrafted for those who value artistry, culture, and timeless style.
+        ></motion.div>
+        <p className="mt-3 text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
+          Every collection is a fusion of African heritage and contemporary design — 
+          handcrafted for those who value artistry, culture, and timeless style.
         </p>
       </div>
 
@@ -101,7 +101,7 @@ const FeaturedProduct = () => {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: id * 0.1 }}
-            className="relative group rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-500"
+            className="relative group rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500"
           >
             {/* Image */}
             <Image
@@ -109,35 +109,33 @@ const FeaturedProduct = () => {
               alt={category}
               width={800}
               height={600}
-              className="w-full h-[320px] object-cover group-hover:scale-105 transition-transform duration-700"
+              className="w-full h-[420px] object-cover group-hover:scale-105 transition-transform duration-700"
             />
 
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-all duration-500"></div>
 
             {/* Content */}
-            <div className="absolute bottom-6 left-5 right-5 text-white">
-              <h3 className="text-xs uppercase tracking-widest font-medium opacity-80">
+            <div className="absolute bottom-8 left-6 right-6 text-white">
+              <h3 className="text-lg uppercase tracking-widest font-medium opacity-80">
                 {category}
               </h3>
-              <h4 className="font-serif text-xl sm:text-2xl font-semibold mt-1 mb-2 text-[rgba(245,231,182,1)]">
+              <h4 className="font-serif text-2xl sm:text-3xl font-semibold mt-1 mb-2 text-[#f5e7b6]">
                 {slogan}
               </h4>
-              <p className="text-sm text-white/90 leading-relaxed mb-4">
+              <p className="text-sm text-white/90 leading-relaxed mb-5 max-w-[90%]">
                 {description}
               </p>
 
               <button
                 onClick={() => handleExplore(filter)}
-                className="inline-flex items-center gap-2 bg-[rgba(197,163,74,1)] hover:bg-[rgba(180,147,63,1)] text-white text-sm font-medium px-4 py-2 rounded-full shadow-md transition-colors duration-300"
+                className="inline-flex items-center gap-2 bg-[#C5A34A] hover:bg-[#b4933f] text-white text-sm font-medium px-5 py-2.5 rounded-full shadow-md transition-all duration-300"
               >
                 Explore Collection
                 <Image
                   src={assets.redirect_icon}
                   alt="arrow"
-                  width={13}
-                  height={13}
-                  className="invert brightness-200"
+                  className="w-3 h-3 invert brightness-200"
                 />
               </button>
             </div>

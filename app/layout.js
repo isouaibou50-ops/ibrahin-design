@@ -29,7 +29,7 @@ const theme = {
 
 
 export const metadata = {
-  title: "Ibrahim Design | African Tailoring in Cape Town",
+  title: "Ibrahim Design | African Tailoring in Cape Town | Tailor in Cape Town",
   description: "Bespoke African fashion by Ibrahim Design. Custom boubous, agbadas, shirts & dresses made in Cape Town.",
   icons: {
     icon: "/ibrahimdesign-logo.png",
