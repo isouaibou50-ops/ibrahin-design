@@ -14,7 +14,7 @@ const HeaderSlider = () => {
       buttonText1: "Design Yours",
       buttonText2: "Explore Styles",
       imgSrc: assets.header_african_attire_image,
-      path1: "/client-dashboard",
+      path1: "/dashboard",
       path2: "/all-shop-products",
     },
     {
@@ -34,7 +34,7 @@ const HeaderSlider = () => {
       buttonText1: "Create Custom Order",
       buttonText2: "Learn More",
       imgSrc: assets.header_traditional_fabric_image,
-      path1: "/client-dashboard",
+      path1: "/dashboard",
       path2: "/about",
     },
   ];
