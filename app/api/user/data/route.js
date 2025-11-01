@@ -1,6 +1,6 @@
 import connectDB from "@/config/db";
 import User from "@/models/User";
-import { getAuth } from "@clerk/nextjs/server";
+import { clerkClient, getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -22,9 +22,22 @@ export async function GET(request) {
     const user = await User.findById(userId);
 
     if (!user) {
+      const newUser = await User.create({ 
+        id : user.id, 
+        email_addresses: user.email_addresses, image_url: user.image_url, first_name: user.first_name, last_name: user.last_name, username: user.username });
+
+      // Set public metadata
+      if (newUser) {
+        await clerkClient.users.updateUserMetadata(id, {
+          publicMetadata: {
+            role: "user",
+          },
+        });
+      }
+      
       return NextResponse.json({
-        success: false,
-        message: "User not found",
+        success: true,
+        newUser,
       });
     }
 
