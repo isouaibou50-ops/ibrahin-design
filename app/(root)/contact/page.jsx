@@ -46,19 +46,19 @@ export default function ContactPage() {
           <div className="space-y-4 text-gray-700 leading-relaxed">
             <div>
               <strong>Email:</strong>{" "}
-              <a href="mailto:info@ibrahimdesign.co.za" className="text-accents" style={{ color: ACCENT }}>
-                info@ibrahimdesign.co.za
+              <a href="mailto:isouaibou50@gmail.com" className="text-accents" style={{ color: ACCENT }}>
+                isouaibou50@gmail.com
               </a>
             </div>
             <div>
               <strong>Phone / WhatsApp:</strong>{" "}
-              <a href="tel:+27212345678" className="text-accents" style={{ color: ACCENT }}>
-                +27 21 234 5678
+              <a href="tel:+27837212432" className="text-accents" style={{ color: ACCENT }}>
+                +27 83 721 2432
               </a>
             </div>
             <div>
               <strong>Address:</strong>{" "}
-              123 Tailor Lane, City Bowl, Cape Town, South Africa
+              Green Market, Protea House, 7, Cape Town City Centre Cape Town, 8001
             </div>
             <div>
               <strong>Studio Hours:</strong> Monday – Friday, 10 am – 6 pm
