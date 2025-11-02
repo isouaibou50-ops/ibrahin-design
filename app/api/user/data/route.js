@@ -25,7 +25,7 @@ export async function GET(request) {
       const {emailAddresses, firstName, lastName, imageUrl } = await currentUser();
       const userData = {
         _id: userId,
-        email: emailAddresses?.[0]?.email_address,
+        email: emailAddresses?.[0]?.emailAddress,
         name: `${firstName || ""} ${lastName || ""}`.trim(),
         imageUrl: imageUrl,
       };
