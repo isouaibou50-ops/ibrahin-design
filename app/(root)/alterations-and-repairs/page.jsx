@@ -110,6 +110,29 @@ export default function AlterationsAndRepairsPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
+      {/* Hero Section */}
+              <motion.section
+                className="text-center space-y-4"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <h1 className="text-3xl sm:text-4xl font-bold">About Ibrahim Design</h1>
+                <p className="text-sm sm:text-base text-gray-600">
+                  Based in the heart of Cape Town, we are your bespoke African tailoring studio — crafting elegance, comfort and cultural pride for men & women.
+                </p>
+                <div className="mt-6 flex justify-center">
+                  <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-xl overflow-hidden shadow-lg">
+                    <Image
+                      src="about-bg.webp"
+                      alt="Ibrahim Design tailoring studio Cape Town"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      priority
+                    />
+                  </div>
+                </div>
+      </motion.section>
       <section className="relative text-center py-20 px-4 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
