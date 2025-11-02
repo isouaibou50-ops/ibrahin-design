@@ -25,7 +25,7 @@ export default function AboutPage() {
           <div className="mt-6 flex justify-center">
             <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-xl overflow-hidden shadow-lg">
               <Image
-                src={assets.about}
+                src="about-bg.webp"
                 alt="Ibrahim Design tailoring studio Cape Town"
                 fill
                 style={{ objectFit: "cover" }}
