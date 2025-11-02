@@ -22,12 +22,12 @@ export async function GET(request) {
     const user = await User.findById(userId);
 
     if (!user) {
-      const {emailAddresses, firstName, lastName, imageUrl } = await currentUser();
+      const currentUser = await currentUser();
       const userData = {
         _id: userId,
-        email: emailAddresses?.[0]?.emailAddress,
-        name: `${firstName || ""} ${lastName || ""}`.trim(),
-        imageUrl: imageUrl,
+        email: currentUser.primaryEmailAddress?.emailAddress,
+        name: `${currentUser.firstName || ""} ${currentUser.lastName || ""}`.trim(),
+        imageUrl: currentUser.imageUrl,
       };
       const newUser = await User.create(userData);
 
