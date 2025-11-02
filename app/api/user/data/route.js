@@ -21,6 +21,7 @@ export async function GET(request) {
     // ✅ Use userId (not useId!)
     const user = await User.findById(userId);
 
+    // User is not in our database let's create 
     if (!user) {
       const currentUser = await currentUser();
       const userData = {
