@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
 import { useClerk, UserButton, useUser } from "@clerk/nextjs";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Scissors } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
@@ -80,6 +80,12 @@ const Navbar = () => {
           >
             Shop
           </Link>
+          <Link
+            href="/alterations-and-repairs"
+            className="hover:text-[#C5A34A] transition-colors"
+          >
+            Alterations/Repairs
+          </Link>
           <Link href="/about" className="hover:text-[#C5A34A] transition-colors">
             About
           </Link>
@@ -119,6 +125,11 @@ const Navbar = () => {
                   label="Products"
                   labelIcon={<BoxIcon />}
                   onClick={() => router.push("/all-shop-products")}
+                />
+                <UserButton.Action
+                  label="Alteration And Repairs"
+                  labelIcon={<Scissors />}
+                  onClick={() => router.push("/alterations-and-repairs")}
                 />
                 <UserButton.Action
                   label="Cart"
@@ -169,8 +180,8 @@ const Navbar = () => {
             className="lg:hidden bg-white border-t border-gray-100 shadow-md"
           >
             <div className="flex flex-col text-gray-800 font-medium divide-y divide-gray-100">
-              {["Home", "Shop", "About", "Contact"].map((item, i) => {
-                const hrefs = ["/", "/all-shop-products", "/about", "/contact"];
+              {["Home", "Shop","Alterations And Repairs", "About", "Contact"].map((item, i) => {
+                const hrefs = ["/", "/all-shop-products","/alterations-and-repairs", "/about", "/contact"];
                 return (
                   <Link
                     key={item}
@@ -247,6 +258,13 @@ const Navbar = () => {
                 >
                   Sign In
                 </button>
+                <Link
+                  href="/alterations-and-repairs"
+                  onClick={() => setOverlayOpen(false)}
+                  className="text-lg text-gray-700 hover:text-[#C5A34A] transition-colors"
+                >
+                  Alteration And Repairs
+                </Link>
                 <Link
                   href="/about"
                   onClick={() => setOverlayOpen(false)}

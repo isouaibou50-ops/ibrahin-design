@@ -3,10 +3,19 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { assets } from "@/assets/assets";
+import Link from "next/link";
+import { PhoneCall } from "lucide-react";
 
 const ACCENT = "#C5A34A";
+const WHATSAPP_NUMBER = "27641234567"; 
 
 const Banner = () => {
+  const handleWhatsApp = (service) => {
+    const message = encodeURIComponent(
+      `Hello Ibrahim Design, I’d like to inquire about your alteration services.`
+    );
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
+  };
   return (
     <section className="relative overflow-hidden bg-white rounded-2xl my-20 border border-gray-100 shadow-sm">
       {/* Soft Accent Glow */}
@@ -46,41 +55,47 @@ const Banner = () => {
           className="flex-1 flex flex-col items-center md:items-start justify-center text-center md:text-left px-6 md:px-12 py-10 md:py-16 space-y-4"
         >
           <h2 className="text-3xl md:text-4xl font-serif font-semibold text-gray-900 leading-snug max-w-md">
-            Tailored Excellence.
+            Alterations And
             <br />
-            <span style={{ color: ACCENT }}>Designed for You.</span>
+            <span style={{ color: ACCENT }}>Custom Repairs.</span>
           </h2>
 
           <p className="text-gray-600 text-sm md:text-base max-w-sm leading-relaxed">
-            Discover the art of bespoke African tailoring — where every stitch
-            celebrates your individuality. Visit our atelier in Cape Town or
-            design your masterpiece online.
+            Every stitch tells a story — from precise tailoring to flawless restorations, we ensure your garments fit your lifestyle perfectly.
           </p>
 
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
-            <motion.button
+            <motion.div
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.98 }}
               className="group flex items-center justify-center gap-2 px-8 py-2.5 rounded-full text-white text-sm md:text-base font-medium shadow-md transition"
               style={{ backgroundColor: ACCENT }}
             >
-              Explore Collection
+              <Link
+                href="/alterations-and-repairs"
+                className="text-white shadow-sm hover:opacity-90 transition"
+                style={{ background: ACCENT }}
+              >
+                Explore Services
+              </Link>
               <Image
                 src={assets.arrow_icon_white}
                 alt="arrow_icon_white"
                 className="w-4 h-4 group-hover:translate-x-1 transition-transform"
               />
-            </motion.button>
+            </motion.div>
 
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.98 }}
-              className="px-8 py-2.5 border rounded-full text-sm md:text-base font-medium transition"
+              onClick={() => handleWhatsApp()}
+              className="flex gap-2 items-center px-8 py-2.5 border rounded-full text-sm md:text-base font-medium transition"
               style={{
                 borderColor: ACCENT,
                 color: ACCENT,
               }}
             >
+              <PhoneCall size={16} />
               Book a Fitting
             </motion.button>
           </div>
