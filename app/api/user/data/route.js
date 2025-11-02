@@ -1,6 +1,6 @@
 import connectDB from "@/config/db";
 import User from "@/models/User";
-import { clerkClient, getAuth } from "@clerk/nextjs/server";
+import { clerkClient, getAuth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -22,9 +22,14 @@ export async function GET(request) {
     const user = await User.findById(userId);
 
     if (!user) {
-      const newUser = await User.create({ 
-        id : user.id, 
-        email_addresses: user.email_addresses, image_url: user.image_url, first_name: user.first_name, last_name: user.last_name, username: user.username });
+      const {emailAddresses, firstName, lastName, imageUrl } = await currentUser();
+      const userData = {
+        _id: userId,
+        email: emailAddresses?.[0]?.email_address,
+        name: `${firstName || ""} ${lastName || ""}`.trim(),
+        imageUrl: imageUrl,
+      };
+      const newUser = await User.create(userData);
 
       // Set public metadata
       if (newUser) {
