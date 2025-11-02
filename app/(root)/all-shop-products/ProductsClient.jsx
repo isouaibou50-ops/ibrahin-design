@@ -134,7 +134,7 @@ export default function ProductsClient({ initialProducts, categories }) {
   return (
     <div>
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row bg-white justify-between items-center gap-3 mb-6">
         {/* Search */}
         <input
           type="text"

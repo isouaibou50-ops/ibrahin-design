@@ -50,7 +50,7 @@ const ProductCard = ({ product }) => {
         </p>
 
         {/* Rating */}
-        <div className="flex items-center gap-1 mt-1">
+        <div className="bg-white flex items-center gap-1 mt-1">
           <span className="text-xs text-gray-600">4.5</span>
           <div className="flex gap-0.5">
             {Array.from({ length: 5 }).map((_, index) => (
