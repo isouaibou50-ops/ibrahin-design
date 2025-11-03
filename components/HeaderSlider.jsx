@@ -9,32 +9,32 @@ const HeaderSlider = () => {
   const sliderData = [
     {
       id: 1,
-      title: "Discover the Art of African Tailoring — Crafted for You by Ibrahim Design.",
+      title: "Bespoke Creations",
       offer: "Exclusive Custom Orders Open Now!",
       buttonText1: "Design Yours",
       buttonText2: "Explore Styles",
-      imgSrc: assets.header_african_attire_image,
+      imgSrc: assets.slidethree,
       path1: "/dashboard",
       path2: "/all-shop-products",
     },
     {
       id: 2,
-      title: "Step Into Elegance — Where Tradition Meets Modern Design.",
+      title: "An Exceptional Custom-Fit Experience.",
       offer: "Tailored to Perfection, Made in Cape Town.",
       buttonText1: "View Collection",
       buttonText2: "Contact Us",
-      imgSrc: assets.header_tailor_workshop_image,
+      imgSrc: assets.slidezero,
       path1: "/all-shop-products",
       path2: "/contact",
     },
     {
       id: 3,
-      title: "Wear Your Heritage with Pride — Bespoke Designs for Every Occasion.",
+      title: "Sewing, Alterations and More.",
       offer: "From Concept to Creation — We Bring Your Vision to Life.",
       buttonText1: "Create Custom Order",
       buttonText2: "Learn More",
-      imgSrc: assets.header_traditional_fabric_image,
-      path1: "/dashboard",
+      imgSrc: assets.slideone,
+      path1: "/alterations-and-repairs",
       path2: "/about",
     },
   ];
@@ -76,7 +76,7 @@ const HeaderSlider = () => {
               <p className="text-[#C5A34A] font-medium mb-3 text-sm sm:text-base tracking-wide">
                 {slide.offer}
               </p>
-              <h1 className="text-lg sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-5 leading-snug drop-shadow-md">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-5 leading-snug drop-shadow-md">
                 {slide.title}
               </h1>
 

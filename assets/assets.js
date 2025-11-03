@@ -38,10 +38,18 @@ import women_collection_image from "./women.webp";
 import kids_collection_image from "./woman.webp";
 import traditional_fabric_image from "./traditional_fabric_image.jpg"
 import about from './about.webp';
+import slideone from "./slide-1.jpg";
+import slidetwo from "./slide-2.jpg"
+import slidethree from "./slide-3.jpg"
+import slidezero from "./slider-0.jpg"
 
 import checkmark from "./checkmark.png";
 
 export const assets = {
+  slidezero,
+  slideone,
+  slidetwo,
+  slidethree,
   men_collection_image,
   women_collection_image,
   kids_collection_image,
