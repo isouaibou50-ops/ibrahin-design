@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Info, PhoneCall, X, Scissors } from "lucide-react";
+import Image from "next/image";
 
 const ACCENT = "#C5A34A";
 const WHATSAPP_NUMBER = "27641234567"; // replace with your number
@@ -124,7 +125,7 @@ export default function AlterationsAndRepairsPage() {
                 <div className="mt-6 flex justify-center">
                   <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-xl overflow-hidden shadow-lg">
                     <Image
-                      src="about-bg.webp"
+                      src={"/about-bg.webp"}
                       alt="Ibrahim Design tailoring studio Cape Town"
                       fill
                       style={{ objectFit: "cover" }}
