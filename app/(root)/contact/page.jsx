@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 const ACCENT = "#C5A34A"; // Gold accent color
 
 export default function ContactPage() {
+  const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
 
   const [minDate, setMinDate] = useState("");
@@ -46,9 +47,7 @@ export default function ContactPage() {
           description: "We'll get back to you within 24–48 hours.",
         });
       } else {
-        toast.error("Oops!", {
-          description: res.error || "Something went wrong. Please try again.",
-        });
+        setMessage(`❌ ${res.error}`);
       }
     });
   };
