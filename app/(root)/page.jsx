@@ -13,6 +13,9 @@ const Home = () => {
     <div className="min-h-screen">
       <HeaderSlider />
       <ShopProductsPreview />
+      <section>
+        <h3>New section test!!!</h3>
+      </section>
       {/* If you want the older HomeProducts section uncomment */}
       {/* <HomeProducts /> */}
       <FeaturedProduct />

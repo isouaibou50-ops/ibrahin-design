@@ -1,9 +1,10 @@
 // app/layout.jsx
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { ClerkProvider } from "@clerk/nextjs";
-
+import { CartProvider } from '@/components/ib-tailoring/cart-context'
+import { MobileNav } from '@/components/ib-tailoring/mobile-nav'
 
 
 // Fonts
@@ -18,6 +19,12 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({ 
+  subsets: ["latin"],
+  variable: '--font-cormorant',
+  weight: ['300', '400', '500', '600', '700']
 });
 
 // Theme (light)
@@ -41,20 +48,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider appearance={{colorPrimary: "#1A1A1A"}}>
-      <html lang="en">
-        <body
-          className={`antialiased ${inter.variable} ${playfair.variable}`}
-          style={{ backgroundColor: theme.background, color: theme.text }}
-        >
-          {/* <Toaster
-            toastOptions={{
-              style: { background: theme.accent, color: theme.background },
-              success: { iconTheme: { primary: theme.accent, secondary: theme.background } },
-            }}
-          /> */}
-              {children}
-        </body>
-      </html>
+     <html lang="en" className="scroll-smooth">
+      <body className={`${inter.variable} ${cormorant.variable} font-sans antialiased bg-background text-foreground`}>
+        <CartProvider>
+          {children}
+          <MobileNav />
+          {/* Bottom padding for mobile nav */}
+          <div className="h-16 md:hidden" />
+        </CartProvider>
+        <Analytics />
+      </body>
+    </html>
     </ClerkProvider>
   );
 }
