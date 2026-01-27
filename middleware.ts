@@ -6,8 +6,10 @@ const isPublicRoute = createRouteMatcher([
   '/sign-up(.*)',
    "/api/shop-products(.*)",  // 👈 mark as public API route
   "/all-shop-products(.*)",
+  "/all-products",
   '/shop-products(.*)',  
   '/about',
+  '/cart',
   '/contact',
   '/api/webhooks/clerk',
   '/alterations-and-repairs'

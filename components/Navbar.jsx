@@ -1,12 +1,20 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
-import { assets, BagIcon, BoxIcon, CartIcon, HomeIcon } from "@/assets/assets";
 import Link from "next/link";
-import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
-import { useClerk, UserButton, useUser } from "@clerk/nextjs";
-import { Menu, X, Scissors } from "lucide-react";
+import { Menu, X, ShoppingBag, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useClerk, UserButton, useUser } from "@clerk/nextjs";
+import { useAppContext } from "@/context/AppContext";
+
+const navLinks = [
+  { label: "HOME", href: "/" },
+  { label: "ABOUT", href: "/about" },
+  { label: "SHOP", href: "/all-shop-products" },
+  { label: "ALTERATIONS", href: "/alterations-and-repairs" },
+  { label: "CONTACT", href: "/contact" },
+];
 
 const Navbar = () => {
   const { router } = useAppContext();
@@ -14,291 +22,255 @@ const Navbar = () => {
   const { user, isLoaded } = useUser();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // ✅ Always call hooks unconditionally
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ✅ Show lightweight placeholder until Clerk loads
-  if (!isLoaded) {
-    return (
-      <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100 py-3 px-4">
-        <div className="animate-pulse flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gray-200 rounded-full" />
-            <div className="h-4 w-24 bg-gray-200 rounded" />
-          </div>
-          <div className="h-6 w-6 bg-gray-200 rounded" />
-        </div>
-      </nav>
-    );
-  }
+  useEffect(() => {
+    document.body.style.overflow =
+      menuOpen || cartOpen || overlayOpen ? "hidden" : "";
+    return () => (document.body.style.overflow = "");
+  }, [menuOpen, cartOpen, overlayOpen]);
+
+  if (!isLoaded) return null;
 
   const role = user?.publicMetadata?.role;
   const isPrivileged = role === "admin" || role === "seller" || role === "staff";
   const dashboardRoute = isPrivileged ? "/admin-dashboard" : "/dashboard";
 
   return (
-    <nav
-      className={`sticky top-0 z-50 bg-white transition-shadow duration-300 ${
-        scrolled ? "shadow-md" : "shadow-sm"
-      } border-b border-gray-100`}
-    >
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3 md:px-10">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/ibrahimdesign-logo.png"
-            alt="Ibrahim Design"
-            width={44}
-            height={44}
-            className="rounded-full object-cover"
-          />
-          <div className="leading-tight">
-            <span className="font-playfair text-lg sm:text-xl font-semibold text-[#0E0E0E]">
-              Ibrahim Design
+    <>
+      {/* HEADER */}
+      <header
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+          scrolled ? "bg-white/95 backdrop-blur shadow-sm" : "bg-white"
+        }`}
+      >
+        {/* MOBILE */}
+        <div className="md:hidden flex items-center justify-between h-16 px-4">
+          <button onClick={() => setMenuOpen(true)}>
+            <Menu className="w-5 h-5" />
+          </button>
+
+          <Link href="/" className="text-center">
+            <span className="block text-[8px] tracking-[0.35em] text-gray-500">
+              IB
             </span>
-            <p className="text-[9px] sm:text-xs text-[#C5A34A] font-medium tracking-widest">
-              AFRICAN TAILORING
-            </p>
-          </div>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-8 text-gray-800 font-medium">
-          <Link href="/" className="hover:text-[#C5A34A] transition-colors">
-            Home
-          </Link>
-          <Link
-            href="/all-shop-products"
-            className="hover:text-[#C5A34A] transition-colors"
-          >
-            Shop
-          </Link>
-          <Link
-            href="/alterations-and-repairs"
-            className="hover:text-[#C5A34A] transition-colors"
-          >
-            Alterations/Repairs
-          </Link>
-          <Link href="/about" className="hover:text-[#C5A34A] transition-colors">
-            About
-          </Link>
-          <Link
-            href="/contact"
-            className="hover:text-[#C5A34A] transition-colors"
-          >
-            Contact
+            <span className="block font-serif text-lg tracking-[0.15em]">
+              TAILORING
+            </span>
+            <span className="block text-[8px] tracking-[0.35em] text-gray-500">
+              CAPE TOWN
+            </span>
           </Link>
 
-          {/* Dynamic Dashboard */}
-          {user && (
-            <button
-              onClick={() => router.push(dashboardRoute)}
-              className="text-xs border border-[#C5A34A] text-[#C5A34A] px-4 py-1.5 rounded-full hover:bg-[#C5A34A] hover:text-white transition-all"
-            >
-              {isPrivileged ? "Admin Dashboard" : "Dashboard"}
-            </button>
-          )}
-
-          {/* User Account / Login */}
-          {user ? (
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-8 h-8",
-                },
-              }}
-            >
-              <UserButton.MenuItems>
-                <UserButton.Action
-                  label="Home"
-                  labelIcon={<HomeIcon />}
-                  onClick={() => router.push("/")}
-                />
-                <UserButton.Action
-                  label="Products"
-                  labelIcon={<BoxIcon />}
-                  onClick={() => router.push("/all-shop-products")}
-                />
-                <UserButton.Action
-                  label="Alteration And Repairs"
-                  labelIcon={<Scissors />}
-                  onClick={() => router.push("/alterations-and-repairs")}
-                />
-                <UserButton.Action
-                  label="Cart"
-                  labelIcon={<CartIcon />}
-                  onClick={() => router.push("/cart")}
-                />
-                <UserButton.Action
-                  label="My Orders"
-                  labelIcon={<BagIcon />}
-                  onClick={() => router.push("/my-orders")}
-                />
-              </UserButton.MenuItems>
-            </UserButton>
-          ) : (
-            <button
-              onClick={() => setOverlayOpen(true)}
-              className="flex items-center gap-2 border border-[#C5A34A]/50 rounded-full px-4 py-1.5 hover:bg-[#C5A34A]/10 transition-all"
-            >
-              <Image
-                src={assets.user_icon}
-                alt="user icon"
-                width={16}
-                height={16}
-              />
-              <span>Account</span>
-            </button>
-          )}
+          <button onClick={() => setCartOpen(true)}>
+            <ShoppingBag className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="lg:hidden text-gray-800 focus:outline-none z-[60]"
-        >
-          {menuOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
-      </div>
+        {/* DESKTOP */}
+        <div className="hidden md:flex items-center justify-between h-20 px-10">
+          <nav className="flex gap-8">
+            {navLinks.slice(0, 3).map((l) => (
+              <Link
+                key={l.label}
+                href={l.href}
+                className="text-xs tracking-[0.15em] hover:opacity-70"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="lg:hidden bg-white border-t border-gray-100 shadow-md"
+          <Link
+            href="/"
+            className="absolute left-1/2 -translate-x-1/2 text-center"
           >
-            <div className="flex flex-col text-gray-800 font-medium divide-y divide-gray-100">
-              {["Home", "Shop","Alterations And Repairs", "About", "Contact"].map((item, i) => {
-                const hrefs = ["/", "/all-shop-products","/alterations-and-repairs", "/about", "/contact"];
-                return (
-                  <Link
-                    key={item}
-                    href={hrefs[i]}
-                    onClick={() => setMenuOpen(false)}
-                    className="px-6 py-3 hover:bg-[#C5A34A]/10 transition-colors"
-                  >
-                    {item}
-                  </Link>
-                );
-              })}
+            <span className="block text-[9px] tracking-[0.35em] text-gray-500">
+              IB
+            </span>
+            <span className="block font-serif text-2xl tracking-[0.15em]">
+              TAILORING
+            </span>
+            <span className="block text-[9px] tracking-[0.35em] text-gray-500">
+              CAPE TOWN
+            </span>
+          </Link>
 
-              {user && (
+          <div className="flex items-center gap-6">
+            <button onClick={() => setCartOpen(true)}>
+              <ShoppingBag className="w-5 h-5" />
+            </button>
+            <Link href="/contact" className="text-xs tracking-[0.15em]">
+              CONTACT
+            </Link>
+            
+            
+
+            {user ? (
+              <>
+                <button onClick={() => router.push(dashboardRoute)}>
+                  <User className="w-5 h-5" />
+                </button>
+                <button onClick={() => setCartOpen(true)}>
+                  <ShoppingBag className="w-5 h-5" />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setOverlayOpen(true)}
+                className="text-xs tracking-[0.15em]"
+              >
+                ACCOUNT
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* CART DRAWER — UI ONLY */}
+      <AnimatePresence>
+        {cartOpen && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black/50 z-[60]"
+              onClick={() => setCartOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            <motion.aside
+              className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white z-[70] flex flex-col"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex items-center justify-between p-4 border-b">
+                <span className="font-serif tracking-[0.15em]">YOUR BAG</span>
+                <button onClick={() => setCartOpen(false)}>
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex-1 p-4 flex flex-col items-center justify-center text-center text-sm text-gray-500">
+                <p>Your bag preview will appear here.</p>
+                <p className="mt-1">You can review items on the cart page.</p>
+              </div>
+
+              <div className="p-4 border-t space-y-3">
                 <button
                   onClick={() => {
-                    router.push(dashboardRoute);
-                    setMenuOpen(false);
+                    setCartOpen(false);
+                    router.push("/cart");
                   }}
-                  className="px-6 py-3 text-left hover:bg-[#C5A34A]/10 transition-colors"
+                  className="w-full border border-black py-3 text-xs tracking-[0.15em]"
                 >
-                  {isPrivileged ? "Admin Dashboard" : "Dashboard"}
+                  VIEW CART
                 </button>
-              )}
 
-              {!user && (
                 <button
                   onClick={() => {
-                    setOverlayOpen(true);
-                    setMenuOpen(false);
+                    setCartOpen(false);
+                    router.push("/cart");
                   }}
-                  className="px-6 py-3 text-left hover:bg-[#C5A34A]/10 transition-colors"
+                  className="w-full bg-black text-white py-3 text-xs tracking-[0.15em]"
                 >
-                  Account
+                  CHECKOUT
                 </button>
-              )}
-
-              {user && (
-                <div className="px-6 py-3">
-                  <UserButton afterSignOutUrl="/" />
-                </div>
-              )}
-            </div>
-          </motion.div>
+              </div>
+            </motion.aside>
+          </>
         )}
       </AnimatePresence>
 
-      {/* Overlay Sign-In */}
+      {/* MOBILE MENU */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black/50 z-[60]"
+              onClick={() => setMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <motion.aside
+              className="fixed top-0 left-0 h-full w-80 bg-white z-[70]"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+            >
+              <div className="flex justify-between p-4 border-b">
+                <span className="font-serif">MENU</span>
+                <button onClick={() => setMenuOpen(false)}>
+                  <X />
+                </button>
+              </div>
+
+              <nav className="p-4 space-y-4">
+                {navLinks.map((l) => (
+                  <Link
+                    key={l.label}
+                    href={l.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="block tracking-[0.15em]"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </nav>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* SIGN-IN OVERLAY (unchanged logic) */}
       <AnimatePresence>
         {overlayOpen && (
           <motion.div
+            className="fixed inset-0 bg-white/95 z-[999] flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.35 }}
-            className="fixed inset-0 bg-white/95 backdrop-blur-md flex flex-col items-center justify-center z-[999]"
           >
-            <motion.div
-              initial={{ y: -30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 30, opacity: 0 }}
-              transition={{ duration: 0.4 }}
-              className="text-center"
-            >
-              <h2 className="text-2xl sm:text-3xl font-playfair mb-6 text-[#0E0E0E]">
-                Welcome to <span className="text-[#C5A34A]">Ibrahim Design</span>
+            <div className="text-center">
+              <h2 className="font-serif text-3xl mb-6">
+                Welcome to{" "}
+                <span className="text-[#C5A34A]">Ibrahim Design</span>
               </h2>
-              <div className="flex flex-col gap-4">
-                <button
-                  onClick={() => {
-                    openSignIn({});
-                    setOverlayOpen(false);
-                  }}
-                  className="text-lg font-medium bg-[#C5A34A] text-white rounded-full px-8 py-3 hover:bg-[#b08d3e] transition-all"
-                >
-                  Sign In
-                </button>
-                <Link
-                  href="/alterations-and-repairs"
-                  onClick={() => setOverlayOpen(false)}
-                  className="text-lg text-gray-700 hover:text-[#C5A34A] transition-colors"
-                >
-                  Alteration And Repairs
-                </Link>
-                <Link
-                  href="/about"
-                  onClick={() => setOverlayOpen(false)}
-                  className="text-lg text-gray-700 hover:text-[#C5A34A] transition-colors"
-                >
-                  About Us
-                </Link>
-                <Link
-                  href="/contact"
-                  onClick={() => setOverlayOpen(false)}
-                  className="text-lg text-gray-700 hover:text-[#C5A34A] transition-colors"
-                >
-                  Contact
-                </Link>
-                <Link
-                  href="/all-shop-products"
-                  onClick={() => setOverlayOpen(false)}
-                  className="text-lg text-gray-700 hover:text-[#C5A34A] transition-colors"
-                >
-                  Shop Now
-                </Link>
-              </div>
-            </motion.div>
+              <button
+                onClick={() => {
+                  openSignIn({});
+                  setOverlayOpen(false);
+                }}
+                className="bg-[#C5A34A] text-white px-8 py-3 rounded-full"
+              >
+                Sign In
+              </button>
+            </div>
 
             <button
               onClick={() => setOverlayOpen(false)}
-              className="absolute top-5 right-6 text-gray-700 hover:text-[#C5A34A] transition-colors"
+              className="absolute top-6 right-6"
             >
-              <X size={32} />
+              <X size={28} />
             </button>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+
+      {/* HEADER SPACER */}
+      <div className="h-16 md:h-20" />
+    </>
   );
 };
 

@@ -41,7 +41,7 @@ import about from './about.webp';
 import slideone from "./slide-1.jpg";
 import slidetwo from "./slide-2.jpg"
 import slidethree from "./slide-3.jpg"
-import slidezero from "./slider-0.jpg"
+import slidezero from "./porsha.png"
 
 import checkmark from "./checkmark.png";
 

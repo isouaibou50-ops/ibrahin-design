@@ -1,128 +1,132 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { assets } from "@/assets/assets";
 
-const HeaderSlider = () => {
-  const sliderData = [
-    {
-      id: 1,
-      title: "Bespoke Creations",
-      offer: "Exclusive Custom Orders Open Now!",
-      buttonText1: "Design Yours",
-      buttonText2: "Explore Styles",
-      imgSrc: assets.slidethree,
-      path1: "/dashboard",
-      path2: "/all-shop-products",
-    },
-    {
-      id: 2,
-      title: "An Exceptional Custom-Fit Experience.",
-      offer: "Tailored to Perfection, Made in Cape Town.",
-      buttonText1: "View Collection",
-      buttonText2: "Contact Us",
-      imgSrc: assets.slidezero,
-      path1: "/all-shop-products",
-      path2: "/contact",
-    },
-    {
-      id: 3,
-      title: "Sewing, Alterations and More.",
-      offer: "From Concept to Creation — We Bring Your Vision to Life.",
-      buttonText1: "Create Custom Order",
-      buttonText2: "Learn More",
-      imgSrc: assets.slideone,
-      path1: "/alterations-and-repairs",
-      path2: "/about",
-    },
-  ];
+const sliderData = [
+  {
+    id: 1,
+    image: assets.slidethree,
+    quote:
+      "UNIQUE COUTURE EVENING GOWNS THAT ARE NOT AIMED AT CAMOUFLAGING THE WOMAN, BUT DRESSING AND ENHANCING HER FEMININE CHARACTER.",
+    primaryText: "Design Yours",
+    secondaryText: "Explore Styles",
+    path1: "/dashboard",
+    path2: "/all-shop-products",
+  },
+  {
+    id: 2,
+    image: assets.slidezero,
+    quote:
+      "AN EXCEPTIONAL CUSTOM-FIT EXPERIENCE, TAILORED TO PERFECTION AND MADE IN CAPE TOWN.",
+    primaryText: "View Collection",
+    secondaryText: "Contact Us",
+    path1: "/all-shop-products",
+    path2: "/contact",
+  },
+  {
+    id: 3,
+    image: assets.slideone,
+    quote:
+      "FROM CONCEPT TO CREATION — WE BRING YOUR VISION TO LIFE WITH PRECISION AND ARTISTRY.",
+    primaryText: "Create Custom Order",
+    secondaryText: "Learn More",
+    path1: "/alterations-and-repairs",
+    path2: "/about",
+  },
+];
 
+const HeaderSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Auto-slide every 6 seconds
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % sliderData.length);
+  }, []);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % sliderData.length);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [sliderData.length]);
+    const timer = setInterval(nextSlide, 7000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
 
   return (
-    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 overflow-hidden rounded-2xl shadow-lg">
-      {/* Slides */}
-      <div
-        className="flex transition-transform duration-700 ease-in-out"
-        style={{
-          transform: `translateX(-${currentSlide * 100}%)`,
-        }}
-      >
-        {sliderData.map((slide) => (
-          <div key={slide.id} className="relative min-w-full flex items-center justify-center">
-            {/* Background */}
+    <section className="relative w-full h-[calc(100vh-80px)] overflow-hidden">
+      {sliderData.map((slide, index) => (
+        <div
+          key={slide.id}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+          }`}
+        >
+          {/* Background image */}
+          <Image
+            src={slide.image}
+            alt="Ibrahim Design Couture"
+            fill
+            priority={index === 0}
+            className="object-cover"
+          />
+
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/30" />
+
+          {/* Content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+            <p
+              className={`max-w-3xl text-white font-serif tracking-wide leading-relaxed transition-all duration-1000 ${
+                index === currentSlide
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-6"
+              }`}
+              style={{ transitionDelay: "400ms" }}
+            >
+              “{slide.quote}”
+            </p>
+
+            {/* CTAs (kept but refined) */}
             <div
-              className="w-full h-[40vh] sm:h-[55vh] md:h-[65vh] lg:h-[70vh] bg-cover bg-center rounded-2xl"
-              style={{
-                backgroundImage: `url(${slide.imgSrc.src})`,
-              }}
-            />
+              className={`mt-10 flex flex-col sm:flex-row gap-4 transition-all duration-1000 ${
+                index === currentSlide
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-6"
+              }`}
+              style={{ transitionDelay: "700ms" }}
+            >
+              <Link
+                href={slide.path1}
+                className="px-8 py-3 bg-[#C5A34A] text-white rounded-full tracking-wide hover:bg-[#b08d3e] transition"
+              >
+                {slide.primaryText}
+              </Link>
 
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-2xl" />
-
-            {/* Content */}
-            <div className="absolute inset-0 flex flex-col justify-center items-center md:items-start text-center md:text-left text-white px-6 sm:px-10 md:px-16 max-w-2xl mx-auto">
-              <p className="text-[#C5A34A] font-medium mb-3 text-sm sm:text-base tracking-wide">
-                {slide.offer}
-              </p>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-5 leading-snug drop-shadow-md">
-                {slide.title}
-              </h1>
-
-              <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-                {/* ✅ Primary button */}
-                <Link
-                  href={slide.path1}
-                  className="px-8 py-2.5 bg-[#C5A34A] hover:bg-[#b08d3e] text-white font-medium rounded-full transition shadow-sm hover:shadow-md active:scale-[0.98]"
-                >
-                  {slide.buttonText1}
-                </Link>
-
-                {/* ✅ Secondary button */}
-                <Link
-                  href={slide.path2}
-                  className="hidden md:flex items-center justify-center gap-2 px-7 py-2.5 font-medium border border-white/40 text-white hover:bg-white/10 rounded-full transition group"
-                >
-                  {slide.buttonText2}
-                  <Image
-                    src={assets.arrow_icon}
-                    alt="arrow_icon"
-                    className="group-hover:translate-x-1 transition"
-                  />
-                </Link>
-              </div>
+              <Link
+                href={slide.path2}
+                className="px-8 py-3 border border-white/50 text-white rounded-full hover:bg-white/10 transition"
+              >
+                {slide.secondaryText}
+              </Link>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
 
-      {/* Dots */}
-      <div className="absolute bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* Indicators */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {sliderData.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            aria-label={`Go to slide ${index + 1}`}
-            className={`h-2.5 w-2.5 rounded-full cursor-pointer transition-all duration-300 ${
+            className={`h-2 rounded-full transition-all duration-300 ${
               currentSlide === index
-                ? "bg-[#C5A34A] scale-110"
-                : "bg-white/40 hover:bg-[#C5A34A]/50"
+                ? "w-6 bg-white"
+                : "w-2 bg-white/50 hover:bg-white/80"
             }`}
+            aria-label={`Go to slide ${index + 1}`}
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
