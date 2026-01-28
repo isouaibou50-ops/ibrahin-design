@@ -38,7 +38,7 @@ export function AboutSection() {
             }`}
           >
             <Image
-              src="/images/bento-skin-model.jpg"
+              src="/about-section.jpg"
               alt="Atelier craftsmanship"
               fill
               className="object-cover"
@@ -66,9 +66,7 @@ export function AboutSection() {
                Founded in Cape Town’s vibrant city bowl, Ibrahim Design started with a vision: to weave African heritage into modern tailoring. From sourcing premium fabrics to the final stitch, every garment is made with precision, culture and character.
               </p>
               <p>
-                We believe that fashion is not merely about clothing, but about
-                capturing the essence of femininity and translating it into wearable
-                art that makes every woman feel extraordinary.
+                Whether it’s a traditional attire for a special celebration or a contemporary custom suit, our studio offers a full made-to-measure service — personalized fittings, fabric selection, and finishing touches that reflect who you are.
               </p>
               <p>
                 Our team of skilled artisans combines traditional techniques with
