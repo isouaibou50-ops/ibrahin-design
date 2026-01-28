@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { assets } from "@/assets/assets";
 
 const sliderData = [
@@ -46,70 +47,81 @@ const HeaderSlider = () => {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 7000);
+    const timer = setInterval(nextSlide, 9000);
     return () => clearInterval(timer);
   }, [nextSlide]);
 
   return (
     <section className="relative w-full h-[calc(100vh-80px)] overflow-hidden">
-      {sliderData.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentSlide}
+          className="absolute inset-0"
+          initial={{
+            y: "-8%",
+            scale: 1.15,
+            opacity: 0,
+          }}
+          animate={{
+            y: "0%",
+            scale: 1,
+            opacity: 1,
+          }}
+          exit={{
+            opacity: 0,
+          }}
+          transition={{
+            y: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
+            scale: { duration: 6, ease: "easeOut" }, // slow zoom-out
+            opacity: { duration: 0.6 },
+          }}
         >
-          {/* Background image */}
+          {/* Image */}
           <Image
-            src={slide.image}
+            src={sliderData[currentSlide].image}
             alt="Ibrahim Design Couture"
             fill
-            priority={index === 0}
+            priority
             className="object-cover"
           />
 
-          {/* Dark overlay */}
+          {/* Overlay */}
           <div className="absolute inset-0 bg-black/30" />
 
           {/* Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-            <p
-              className={`max-w-3xl text-white font-serif tracking-wide leading-relaxed transition-all duration-1000 ${
-                index === currentSlide
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-6"
-              }`}
-              style={{ transitionDelay: "400ms" }}
+            <motion.p
+              className="max-w-3xl text-white font-serif tracking-wide leading-relaxed"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.9 }}
             >
-              “{slide.quote}”
-            </p>
+              “{sliderData[currentSlide].quote}”
+            </motion.p>
 
-            {/* CTAs (kept but refined) */}
-            <div
-              className={`mt-10 flex flex-col sm:flex-row gap-4 transition-all duration-1000 ${
-                index === currentSlide
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-6"
-              }`}
-              style={{ transitionDelay: "700ms" }}
+            <motion.div
+              className="mt-10 flex flex-col sm:flex-row gap-4"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.9 }}
             >
               <Link
-                href={slide.path1}
+                href={sliderData[currentSlide].path1}
                 className="px-8 py-3 bg-[#C5A34A] text-white rounded-full tracking-wide hover:bg-[#b08d3e] transition"
               >
-                {slide.primaryText}
+                {sliderData[currentSlide].primaryText}
               </Link>
 
               <Link
-                href={slide.path2}
+                href={sliderData[currentSlide].path2}
                 className="px-8 py-3 border border-white/50 text-white rounded-full hover:bg-white/10 transition"
               >
-                {slide.secondaryText}
+                {sliderData[currentSlide].secondaryText}
               </Link>
-            </div>
+            </motion.div>
           </div>
-        </div>
-      ))}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">

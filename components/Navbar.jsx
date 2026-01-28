@@ -217,6 +217,14 @@ const Navbar = () => {
               </div>
 
               <nav className="p-4 space-y-4">
+                <Link
+                    key="admin-dashboard"
+                    href="/admin-dashboard"
+                    onClick={() => setMenuOpen(false)}
+                    className="block tracking-[0.15em]"
+                  >
+                    My Dashboard
+                </Link>
                 {navLinks.map((l) => (
                   <Link
                     key={l.label}
