@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -18,7 +18,7 @@
     "inngest": "^3.44.3",
     "lucide-react": "^0.548.0",
     "mongoose": "^8.19.2",
-    "next": "^15.2.3",
+    "next": "^16.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.1",
