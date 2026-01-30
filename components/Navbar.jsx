@@ -105,7 +105,7 @@ const Navbar = () => {
           </Link>
 
           <div className="flex items-center gap-6">
-            <button onClick={() => setCartOpen(true)}>
+            <button onClick={() => setCartOpen(true)} className="md:hidden">
               <ShoppingBag className="w-5 h-5" />
             </button>
             <Link href="/contact" className="text-xs tracking-[0.15em]">
