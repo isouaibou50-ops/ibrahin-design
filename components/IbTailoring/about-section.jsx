@@ -38,7 +38,7 @@ export function AboutSection() {
             }`}
           >
             <Image
-              src="/about-section.jpg"
+              src="/about-bg.webp"
               alt="Atelier craftsmanship"
               fill
               className="object-cover"
