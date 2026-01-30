@@ -1,11 +1,14 @@
 import connectDB from "@/config/db";
 import User from "@/models/User";
-import { clerkClient, getAuth, currentUser } from "@clerk/nextjs/server";
+import {
+  clerkClient,
+  getAuth,
+  currentUser as getCurrentUser,
+} from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
   try {
-    // ✅ Pass the request to getAuth so Clerk can extract the user
     const { userId } = getAuth(request);
 
     if (!userId) {
@@ -15,39 +18,43 @@ export async function GET(request) {
       });
     }
 
-    // ✅ Connect to MongoDB
     await connectDB();
 
-    // ✅ Use userId (not useId!)
     const user = await User.findById(userId);
 
-    // User is not in our database let's create 
+    // User not in DB → create
     if (!user) {
-      const currentUser = await currentUser();
-      const userData = {
-        _id: userId,
-        email: currentUser.primaryEmailAddress?.emailAddress,
-        name: `${currentUser.firstName || ""} ${currentUser.lastName || ""}`.trim(),
-        imageUrl: currentUser.imageUrl,
-      };
-      const newUser = await User.create(userData);
+      const clerkUser = await getCurrentUser();
 
-      // Set public metadata
-      if (newUser) {
-        await clerkClient.users.updateUserMetadata(id, {
-          publicMetadata: {
-            role: "user",
-          },
+      if (!clerkUser) {
+        return NextResponse.json({
+          success: false,
+          message: "Unable to fetch Clerk user",
         });
       }
-      
+
+      const userData = {
+        _id: userId,
+        email: clerkUser.primaryEmailAddress?.emailAddress,
+        name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim(),
+        imageUrl: clerkUser.imageUrl,
+      };
+
+      const newUser = await User.create(userData);
+
+      await clerkClient.users.updateUserMetadata(userId, {
+        publicMetadata: {
+          role: "user",
+        },
+      });
+
+
       return NextResponse.json({
         success: true,
-        newUser,
+        user: newUser,
       });
     }
 
-    // ✅ Return user data
     return NextResponse.json({
       success: true,
       user,
@@ -61,30 +68,3 @@ export async function GET(request) {
     });
   }
 }
-
-
-
-// import connectDB from "@/config/db";
-// import User from "@/models/User";
-// import  { getAuth } from "@clerk/nextjs/server";
-// import { NextResponse } from "next/server";
-
-
-
-// export async function GET(request) {
-//     try {
-//         const { userId } = getAuth(request);
-
-//         await connectDB()
-//         const user = await User.findById(userId)
-
-//         if (!user) {
-//             return NextResponse.json({ succes: false, message: "User Not Found"})
-//         }
-
-//         return NextResponse.json({succes: true, user })
-
-//     } catch (error) {
-//         return NextResponse.json({ succes: false, message: error.message})
-//     }
-// }
