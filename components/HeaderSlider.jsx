@@ -117,10 +117,6 @@ const HeaderSlider = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleWhatsApp()}
                 className="flex gap-2 items-center px-8 py-2.5 border rounded-full text-sm md:text-base font-medium transition"
-                style={{
-                  borderColor: ACCENT,
-                  color: ACCENT,
-                }}
               >
                 <PhoneCall size={16} />
                 Book a Fitting 
