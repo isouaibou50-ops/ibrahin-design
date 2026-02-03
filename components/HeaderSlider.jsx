@@ -105,12 +105,6 @@ const HeaderSlider = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 0.9 }}
             >
-              <Link
-                href={sliderData[currentSlide].path1}
-                className="px-8 py-3 bg-[#C5A34A] text-white rounded-full tracking-wide hover:bg-[#b08d3e] transition"
-              >
-                {sliderData[currentSlide].primaryText}
-              </Link>
 
               <Link
                 href={sliderData[currentSlide].path2}
@@ -118,6 +112,19 @@ const HeaderSlider = () => {
               >
                 {sliderData[currentSlide].secondaryText}
               </Link>
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleWhatsApp()}
+                className="flex gap-2 items-center px-8 py-2.5 border rounded-full text-sm md:text-base font-medium transition"
+                style={{
+                  borderColor: ACCENT,
+                  color: ACCENT,
+                }}
+              >
+                <PhoneCall size={16} />
+                Book a Fitting 
+              </motion.button>
             </motion.div>
           </div>
         </motion.div>
