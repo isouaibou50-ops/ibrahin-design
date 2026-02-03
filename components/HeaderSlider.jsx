@@ -6,6 +6,9 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { assets } from "@/assets/assets";
 
+
+const ACCENT = "#C5A34A";
+const WHATSAPP_NUMBER = "27837212432";
 const sliderData = [
   {
     id: 1,
@@ -45,6 +48,12 @@ const HeaderSlider = () => {
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % sliderData.length);
   }, []);
+  const handleWhatsApp = (service) => {
+    const message = encodeURIComponent(
+      `Hello Ibrahim Design, I’d like to inquire about your alteration services.`
+    );
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
+  };
 
   useEffect(() => {
     const timer = setInterval(nextSlide, 9000);
