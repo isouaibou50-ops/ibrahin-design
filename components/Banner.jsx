@@ -7,7 +7,7 @@ import Link from "next/link";
 import { PhoneCall } from "lucide-react";
 
 const ACCENT = "#C5A34A";
-const WHATSAPP_NUMBER = "27641234567"; 
+const WHATSAPP_NUMBER = "27837212432"; 
 
 const Banner = () => {
   const handleWhatsApp = (service) => {
