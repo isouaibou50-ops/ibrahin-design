@@ -4,117 +4,100 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { assets } from "@/assets/assets";
 import Link from "next/link";
-import { PhoneCall } from "lucide-react";
+import { PhoneCall, ArrowRight } from "lucide-react";
 
-const ACCENT = "#C5A34A";
-const WHATSAPP_NUMBER = "27837212432"; 
+const ACCENT = "#C9A35A";
+const WHATSAPP_NUMBER = "27641234567"; // Cape Town localized
 
 const Banner = () => {
-  const handleWhatsApp = (service) => {
+  const handleWhatsApp = () => {
     const message = encodeURIComponent(
-      `Hello Ibrahim Design, I’d like to inquire about your alteration services.`
+      `Hello Ibrahim Design, I’d like to inquire about your bespoke alteration and repair services.`
     );
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
   };
+
   return (
-    <section className="relative overflow-hidden bg-white rounded-2xl my-20 border border-gray-100 shadow-sm">
-      {/* Soft Accent Glow */}
+    <section className="relative overflow-hidden bg-white my-24 border-y border-neutral-100">
+      {/* Refined Brand Ambient Glow */}
       <div
-        className="absolute top-0 left-0 w-72 h-72 bg-[color:var(--accent)]/10 rounded-full blur-3xl"
-        style={{ backgroundColor: `${ACCENT}30` }}
-        aria-hidden
-      />
-      <div
-        className="absolute bottom-0 right-0 w-72 h-72 bg-[color:var(--accent)]/10 rounded-full blur-3xl"
-        style={{ backgroundColor: `${ACCENT}30` }}
-        aria-hidden
+        className="absolute top-0 left-0 w-96 h-96 opacity-20 rounded-full blur-[100px] pointer-events-none"
+        style={{ backgroundColor: ACCENT }}
       />
 
-      <div className="relative flex flex-col md:flex-row items-center justify-between">
-        {/* Left Image */}
+      <div className="relative flex flex-col md:flex-row items-stretch justify-between min-h-[450px]">
+        
+        {/* Left Image - The Craft */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="flex-1 flex justify-center items-center bg-gradient-to-tr from-gray-50 to-white py-8 md:py-0"
+          initial={{ opacity: 0, scale: 1.05 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="flex-1 relative min-h-[300px] md:min-h-auto overflow-hidden"
         >
           <Image
             src={assets.tailor_craft_image}
             alt="Tailoring workshop"
-            width={400}
-            height={400}
-            className="w-4/5 md:w-[80%] lg:w-[70%] rounded-xl object-cover shadow-sm"
+            fill
+            className="object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700"
           />
+          <div className="absolute inset-0 bg-black/10" />
         </motion.div>
 
-        {/* Center Text */}
+        {/* Center Content - The Message */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex-1 flex flex-col items-center md:items-start justify-center text-center md:text-left px-6 md:px-12 py-10 md:py-16 space-y-4"
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="flex-[1.2] flex flex-col items-center md:items-start justify-center text-center md:text-left px-8 md:px-16 py-16 md:py-20 bg-white z-10"
         >
-          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-gray-900 leading-snug max-w-md">
-            Alterations And
-            <br />
-            <span style={{ color: ACCENT }}>Custom Repairs.</span>
+          <span className="text-[10px] tracking-[0.4em] text-[#C9A35A] uppercase font-bold mb-4">
+            Atelier Services
+          </span>
+
+          <h2 className="text-3xl md:text-5xl font-serif text-neutral-900 leading-[1.1] mb-6">
+            Perfecting the <br />
+            <span className="italic font-light">Art of the Fit</span>
           </h2>
 
-          <p className="text-gray-600 text-sm md:text-base max-w-sm leading-relaxed">
-            Every stitch tells a story — from precise tailoring to flawless restorations, we ensure your garments fit your lifestyle perfectly.
+          <p className="text-neutral-500 text-sm md:text-base max-w-md leading-relaxed mb-10 font-light">
+            Every stitch tells a story. From precise bespoke tailoring to flawless restorations, we ensure your garments reflect the character and sophistication you deserve.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
-            <motion.div
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.98 }}
-              className="group flex items-center justify-center gap-2 px-8 py-2.5 rounded-full text-white text-sm md:text-base font-medium shadow-md transition"
-              style={{ backgroundColor: ACCENT }}
+          <div className="flex flex-col sm:flex-row items-center gap-6 w-full md:w-auto">
+            <Link
+              href="/alterations-and-repairs"
+              className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-4 bg-[#1A1A1A] text-white text-[10px] tracking-[0.2em] uppercase font-bold hover:bg-[#C9A35A] transition-all duration-300"
             >
-              <Link
-                href="/alterations-and-repairs"
-                className="text-white shadow-sm hover:opacity-90 transition"
-                style={{ background: ACCENT }}
-              >
-                Explore Services
-              </Link>
-              <Image
-                src={assets.arrow_icon_white}
-                alt="arrow_icon_white"
-                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-              />
-            </motion.div>
+              Explore Services <ArrowRight className="w-3 h-3" />
+            </Link>
 
-            <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleWhatsApp()}
-              className="flex gap-2 items-center px-8 py-2.5 border rounded-full text-sm md:text-base font-medium transition"
-              style={{
-                borderColor: ACCENT,
-                color: ACCENT,
-              }}
+            <button
+              onClick={handleWhatsApp}
+              className="group flex items-center gap-3 text-[10px] tracking-[0.2em] uppercase font-bold text-neutral-900 hover:text-[#C9A35A] transition-colors"
             >
-              <PhoneCall size={16} />
-              Book a Fitting
-            </motion.button>
+              <PhoneCall size={14} className="text-[#C9A35A]" />
+              <span className="border-b border-neutral-200 group-hover:border-[#C9A35A] pb-1 transition-all">
+                Book a Fitting
+              </span>
+            </button>
           </div>
         </motion.div>
 
-        {/* Right Image */}
+        {/* Right Image - The Heritage */}
         <motion.div
-          initial={{ opacity: 0, x: 40 }}
+          initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="hidden md:flex flex-1 justify-center items-center bg-gradient-to-tl from-gray-50 to-white py-8"
+          transition={{ duration: 1.2, delay: 0.4 }}
+          className="hidden lg:flex flex-1 relative overflow-hidden border-l border-neutral-50"
         >
           <Image
             src={assets.traditional_fabric_image}
-            alt="African fabric"
-            width={400}
-            height={400}
-            className="w-[70%] rounded-xl object-cover shadow-sm"
+            alt="African fabric artistry"
+            fill
+            className="object-cover"
           />
+          {/* Subtle overlay to pull text focus to the center */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent" />
         </motion.div>
       </div>
     </section>

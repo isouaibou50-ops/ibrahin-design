@@ -6,9 +6,6 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { assets } from "@/assets/assets";
 
-
-const ACCENT = "#C5A34A";
-const WHATSAPP_NUMBER = "27837212432";
 const sliderData = [
   {
     id: 1,
@@ -48,108 +45,107 @@ const HeaderSlider = () => {
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % sliderData.length);
   }, []);
-  const handleWhatsApp = (service) => {
-    const message = encodeURIComponent(
-      `Hello Ibrahim Design, I’d like to inquire about your alteration services.`
-    );
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
-  };
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 9000);
+    const timer = setInterval(nextSlide, 8000);
     return () => clearInterval(timer);
   }, [nextSlide]);
 
   return (
-    <section className="relative w-full h-[calc(100vh-80px)] overflow-hidden">
+    <section className="relative w-full h-screen lg:h-[90vh] overflow-hidden bg-neutral-900">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide}
           className="absolute inset-0"
-          initial={{
-            y: "-8%",
-            scale: 1.15,
-            opacity: 0,
-          }}
-          animate={{
-            y: "0%",
-            scale: 1,
-            opacity: 1,
-          }}
-          exit={{
-            opacity: 0,
-          }}
-          transition={{
-            y: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
-            scale: { duration: 6, ease: "easeOut" }, // slow zoom-out
-            opacity: { duration: 0.6 },
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
         >
-          {/* Image */}
-          <Image
-            src={sliderData[currentSlide].image}
-            alt="Ibrahim Design Couture"
-            fill
-            priority
-            className="object-cover"
-          />
+          {/* Zooming Image Container (Ken Burns Effect) */}
+          <motion.div 
+            className="relative w-full h-full"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 8, ease: "linear" }}
+          >
+            <Image
+              src={sliderData[currentSlide].image}
+              alt="Ibrahim Design Couture"
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          </motion.div>
 
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-black/30" />
+          {/* Luxury Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
 
-          {/* Content */}
+          {/* Content Container */}
           <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-            <motion.p
-              className="max-w-3xl text-white font-serif tracking-wide leading-relaxed"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.9 }}
-            >
-              “{sliderData[currentSlide].quote}”
-            </motion.p>
-
-            <motion.div
-              className="mt-10 flex flex-col sm:flex-row gap-4"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 0.9 }}
-            >
-
-              <Link
-                href={sliderData[currentSlide].path2}
-                className="px-8 py-3 border border-white/50 text-white rounded-full hover:bg-white/10 transition"
+            <div className="max-w-4xl space-y-8">
+              <motion.span 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="block text-[10px] md:text-xs tracking-[0.5em] text-[#C9A35A] uppercase font-medium"
               >
-                {sliderData[currentSlide].secondaryText}
-              </Link>
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleWhatsApp()}
-                className="flex gap-2 items-center px-8 py-2.5 border rounded-full text-sm md:text-base font-medium transition"
+                Bespoke Excellence
+              </motion.span>
+
+              <motion.p
+                className="text-white font-serif text-xl md:text-3xl lg:text-4xl tracking-wide leading-relaxed italic"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 1 }}
               >
-                <PhoneCall size={16} />
-                Book a Fitting 
-              </motion.button>
-            </motion.div>
+                &ldquo;{sliderData[currentSlide].quote}&rdquo;
+              </motion.p>
+
+              <motion.div
+                className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.1, duration: 1 }}
+              >
+                <Link
+                  href={sliderData[currentSlide].path1}
+                  className="group relative px-10 py-4 bg-[#C9A35A] text-white text-[10px] tracking-[0.3em] uppercase overflow-hidden transition-all duration-300 hover:bg-[#1A1A1A]"
+                >
+                  <span className="relative z-10">{sliderData[currentSlide].primaryText}</span>
+                </Link>
+
+                <Link
+                  href={sliderData[currentSlide].path2}
+                  className="px-10 py-4 border border-white/30 text-white text-[10px] tracking-[0.3em] uppercase backdrop-blur-sm hover:bg-white hover:text-black transition-all duration-500"
+                >
+                  {sliderData[currentSlide].secondaryText}
+                </Link>
+              </motion.div>
+            </div>
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+      {/* Modern Minimalist Indicators */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
         {sliderData.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              currentSlide === index
-                ? "w-6 bg-white"
-                : "w-2 bg-white/50 hover:bg-white/80"
-            }`}
+            className="group relative p-2"
             aria-label={`Go to slide ${index + 1}`}
-          />
+          >
+            <div className={`h-[2px] transition-all duration-500 ${
+              currentSlide === index ? "w-12 bg-[#C9A35A]" : "w-6 bg-white/40 group-hover:bg-white"
+            }`} />
+          </button>
         ))}
       </div>
+
+      {/* Decorative vertical line */}
+      <div className="absolute bottom-0 right-12 hidden lg:block w-[1px] h-24 bg-gradient-to-t from-white/50 to-transparent z-20" />
     </section>
   );
 };

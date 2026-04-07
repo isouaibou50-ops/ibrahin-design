@@ -2,86 +2,92 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { assets } from "@/assets/assets";
 
 export function AboutSection() {
-  const sectionRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-secondary/30">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-          {/* Image */}
-          <div
-            className={`relative aspect-[4/5] overflow-hidden transition-all duration-1000 ${
-              isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-10"
-            }`}
+    <section className="py-20 md:py-32 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          
+          {/* Image Composition */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="relative"
           >
-            <Image
-              src="/about-bg.webp"
-              alt="Atelier craftsmanship"
-              fill
-              className="object-cover"
-            />
-          </div>
+            {/* Main Image */}
+            <div className="relative aspect-[4/5] w-full overflow-hidden shadow-2xl">
+              <Image
+                src="/about-bg.webp" // Ensure this path is correct or use assets.aboutImage
+                alt="Atelier craftsmanship"
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-[3s]"
+              />
+              <div className="absolute inset-0 bg-[#1A1A1A]/5 mix-blend-multiply" />
+            </div>
 
-          {/* Content */}
-          <div
-            className={`transition-all duration-1000 delay-300 ${
-              isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-10"
-            }`}
+            {/* Decorative Gold Frame (Floating Element) */}
+            <div className="absolute -bottom-6 -right-6 w-1/2 aspect-square border border-[#C9A35A] -z-10 hidden md:block" />
+            
+            {/* Established Date Label */}
+            <div className="absolute top-10 -left-10 bg-white p-6 shadow-xl hidden xl:block">
+              <p className="text-[10px] tracking-[0.4em] text-[#C9A35A] font-bold rotate-180 [writing-mode:vertical-lr]">
+                EST. CAPE TOWN
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Text Content */}
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
+            className="flex flex-col items-start"
           >
-            <span className="text-xs tracking-[0.3em] text-muted-foreground mb-4 block">
-              ABOUT THE ATELIER
+            <span className="text-[10px] md:text-xs tracking-[0.4em] text-[#C9A35A] font-semibold mb-6 uppercase">
+              The Ibrahim Legacy
             </span>
 
-            <h2 className="font-serif text-3xl md:text-4xl tracking-wide mb-6 leading-tight">
-              Where Dreams Become Reality
+            <h2 className="font-serif text-3xl md:text-5xl tracking-tight mb-8 leading-[1.1] text-neutral-900">
+              Where Heritage <br /> 
+              <span className="italic font-light">Meets Haute Couture</span>
             </h2>
 
-            <div className="space-y-4 text-muted-foreground text-sm leading-relaxed mb-8">
+            <div className="space-y-6 text-neutral-600 text-sm md:text-base leading-relaxed mb-10 font-light">
               <p>
-               Founded in Cape Town’s vibrant city bowl, Ibrahim Design started with a vision: to weave African heritage into modern tailoring. From sourcing premium fabrics to the final stitch, every garment is made with precision, culture and character.
+                Founded in the heart of Cape Town’s vibrant landscape, Ibrahim Design is more than a label—it is a sanctuary for African heritage reimagined through the lens of modern tailoring.
               </p>
-              <p>
-                Whether it’s a traditional attire for a special celebration or a contemporary custom suit, our studio offers a full made-to-measure service — personalized fittings, fabric selection, and finishing touches that reflect who you are.
+              
+              <p className="border-l-2 border-[#C9A35A] pl-6 italic py-1">
+                "We don't just create garments; we weave stories of culture, character, and individual elegance into every seam."
               </p>
+
               <p>
-                Our team of skilled artisans combines traditional techniques with
-                contemporary vision, ensuring that every gown tells a story of
-                sophistication and grace.
+                Whether it is the intricate geometry of a traditional Agbada or the sharp precision of a custom contemporary suit, our studio provides a bespoke made-to-measure experience that honors the unique silhouette of every client.
               </p>
             </div>
 
             <Link
               href="/about"
-              className="inline-block px-8 py-3 bg-foreground text-background text-xs tracking-[0.2em] hover:bg-foreground/90 transition-colors"
+              className="group relative inline-flex items-center gap-4 text-[10px] tracking-[0.3em] font-bold uppercase"
             >
-              DISCOVER MORE
+              <span className="relative">
+                Discover Our Story
+                <span className="absolute -bottom-2 left-0 w-full h-[1px] bg-black transform origin-left transition-transform duration-300 group-hover:scale-x-0" />
+              </span>
+              <motion.span 
+                animate={{ x: [0, 5, 0] }} 
+                transition={{ repeat: Infinity, duration: 2 }}
+                className="w-8 h-[1px] bg-[#C9A35A]"
+              />
             </Link>
-          </div>
+          </motion.div>
+
         </div>
       </div>
     </section>
