@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import connectDB from "@/config/db";
 import ShopProduct from "@/models/ShopProduct";
+import { ArrowLeft, Ruler, Truck, ShieldCheck, Share2 } from "lucide-react";
 
 import ImageGallery from "@/components/ImageGallery";
 import QuickActions from "@/components/QuickActions";
@@ -11,8 +12,9 @@ import ShareButton from "@/components/ShareButton";
 import WishlistButton from "@/components/WishlistButton";
 
 export const dynamic = "force-dynamic";
-const ACCENT = "#C5A34A";
+const ACCENT = "#C9A35A";
 
+// Robust image normalizer for consistent gallery performance
 function normalizeImages(raw) {
   if (!raw) return [];
   const extractUrls = (text) => {
@@ -46,7 +48,6 @@ function serializeProduct(doc) {
     category: doc.category || "Uncategorized",
     isPublic: !!doc.isPublic,
     date: doc.date ? Number(doc.date) : doc.createdAt ? new Date(doc.createdAt).getTime() : Date.now(),
-    createdAt: doc.createdAt ? new Date(doc.createdAt).toISOString() : null,
   };
 }
 
@@ -62,105 +63,143 @@ export default async function ProductPage({ params }) {
   if (!productRaw) return notFound();
 
   const product = serializeProduct(productRaw);
+  
+  // Fetch related products from the same category
   const relatedRaw = await ShopProduct.find({
-    category: product.category || "Uncategorized",
+    category: product.category,
     _id: { $ne: product._id },
     isPublic: true,
-  })
-    .sort({ date: -1 })
-    .limit(4)
-    .lean();
-  const related = Array.isArray(relatedRaw) ? relatedRaw.map(serializeProduct) : [];
-  const images = product.image && product.image.length ? product.image : [];
+  }).limit(4).lean();
+  
+  const related = relatedRaw.map(serializeProduct);
+  const images = product.image.length ? product.image : ["/placeholder.jpg"];
 
   return (
-    <main className="bg-white text-gray-900">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-          <div className="md:col-span-7">
+    <main className="bg-white text-neutral-900 pt-24 pb-20">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+        
+        {/* Breadcrumb / Back */}
+        <Link 
+          href="/all-shop-products" 
+          className="inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-bold mb-8 hover:text-[#C9A35A] transition-colors"
+        >
+          <ArrowLeft size={14} /> Back to Collection
+        </Link>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          
+          {/* LEFT: Imagery */}
+          <div className="lg:col-span-7 space-y-6">
             <ImageGallery images={images} />
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <span className="text-xs px-2 py-1 rounded text-white" style={{ background: ACCENT }}>
-                {product.category}
+            
+            {/* Mobile Info Overlay (Category/Date) */}
+            <div className="flex items-center justify-between border-t border-neutral-100 pt-6">
+              <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400">
+                Studio Category: <span className="text-neutral-900">{product.category}</span>
               </span>
-              {product.offerPrice != null && (
-                <span className="text-xs px-2 py-1 rounded border text-gray-700">Offer</span>
-              )}
-              <span className="text-xs text-gray-500">{new Date(product.date).toLocaleDateString()}</span>
+              <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400">
+                Ref: {product._id.slice(-6)}
+              </span>
             </div>
           </div>
 
-          <div className="md:col-span-5 flex flex-col justify-between">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-semibold mb-3">{product.name}</h1>
-              {product.offerPrice != null ? (
-                <div className="flex items-baseline gap-3 mb-3">
-                  <div className="text-xl font-semibold text-gray-900">R {product.offerPrice}</div>
-                  <div className="text-sm line-through text-gray-400">R {product.price}</div>
-                </div>
-              ) : (
-                <div className="text-lg font-medium text-gray-900 mb-3">{product.price ? `R ${product.price}` : ""}</div>
-              )}
-
-              <p className="text-gray-700 leading-relaxed mb-4">{product.description}</p>
-
-              <div className="text-sm text-gray-600 mb-4">
-                <div>
-                  Category: <strong className="text-gray-800">{product.category}</strong>
-                </div>
-                <div className="mt-1">
-                  Product ID: <span className="text-xs text-gray-500">{product._id}</span>
+          {/* RIGHT: Product Details */}
+          <div className="lg:col-span-5 flex flex-col">
+            <div className="sticky top-32 space-y-8">
+              
+              <div className="space-y-4">
+                <span className="text-[10px] tracking-[0.5em] text-[#C9A35A] uppercase font-bold">
+                  Bespoke Creation
+                </span>
+                <h1 className="text-4xl md:text-5xl font-serif leading-tight">
+                  {product.name}
+                </h1>
+                
+                <div className="flex items-baseline gap-4">
+                  {product.offerPrice ? (
+                    <>
+                      <span className="text-2xl font-light text-neutral-900">R {product.offerPrice.toLocaleString()}</span>
+                      <span className="text-lg text-neutral-300 line-through font-light">R {product.price.toLocaleString()}</span>
+                    </>
+                  ) : (
+                    <span className="text-2xl font-light text-neutral-900">
+                      {product.price ? `R ${product.price.toLocaleString()}` : "Price on Request"}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              <QuickActions product={product} />
-            </div>
+              <div className="prose prose-neutral font-light text-neutral-600 leading-relaxed max-w-none">
+                <p>{product.description}</p>
+              </div>
 
-            <div className="mt-6 flex items-center gap-3">
-              <ShareButton product={product} />
-              <WishlistButton productId={product._id} />
+              {/* Artisan Meta Info */}
+              <div className="grid grid-cols-2 gap-y-6 border-y border-neutral-100 py-8">
+                <div className="flex items-center gap-3">
+                  <Ruler size={18} className="text-[#C9A35A]" />
+                  <span className="text-[10px] tracking-widest uppercase font-medium">Custom Fit Available</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Truck size={18} className="text-[#C9A35A]" />
+                  <span className="text-[10px] tracking-widest uppercase font-medium">Cape Town Courier</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <ShieldCheck size={18} className="text-[#C9A35A]" />
+                  <span className="text-[10px] tracking-widest uppercase font-medium">Authentic Craft</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Share2 size={18} className="text-[#C9A35A]" />
+                  <ShareButton product={product} />
+                </div>
+              </div>
+
+              {/* CTA Section */}
+              <div className="space-y-4 pt-4">
+                <QuickActions product={product} />
+                <div className="w-full">
+                   <WishlistButton productId={product._id} />
+                </div>
+              </div>
+
+              <p className="text-[9px] text-neutral-400 tracking-[0.1em] italic text-center">
+                Each Ibrahim Design piece is handcrafted. Minor variations in pattern placement reflect the authentic nature of the craft.
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="my-10 border-t pt-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Related Creations</h2>
-            <Link href="/all-shop-products" className="text-sm" style={{ color: ACCENT }}>
-              View all
+        {/* Related Creations */}
+        <section className="mt-32 pt-20 border-t border-neutral-100">
+          <div className="flex items-end justify-between mb-12">
+            <div className="space-y-2">
+              <span className="text-[10px] tracking-[0.4em] text-[#C9A35A] uppercase font-bold">Recommendations</span>
+              <h2 className="text-3xl font-serif">Related Creations</h2>
+            </div>
+            <Link 
+              href="/all-shop-products" 
+              className="text-[10px] tracking-[0.2em] uppercase font-bold border-b border-black pb-1 hover:text-[#C9A35A] hover:border-[#C9A35A] transition-all"
+            >
+              View Full Collection
             </Link>
           </div>
 
-          {related.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {related.map((r) => (
-                <article key={r._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
-                  <Link href={`/shop-products/${r.slug || r._id}`} className="block">
-                    <div className="relative w-full h-36 bg-gray-100 flex items-center justify-center">
-                      {r.image && r.image.length > 0 ? (
-                        <Image src={r.image[0]} alt={r.name} fill style={{ objectFit: "cover" }} />
-                      ) : (
-                        <div className="text-xs text-gray-400">No image</div>
-                      )}
-                    </div>
-                    <div className="p-3">
-                      <h3 className="text-sm font-medium truncate">{r.name}</h3>
-                      <p className="text-xs text-gray-500 mt-1 line-clamp-2">{r.description}</p>
-                      <div className="mt-3 flex items-center justify-between">
-                        <span className="text-xs text-gray-400">{r.category}</span>
-                        <span className="text-xs text-white px-2 py-0.5 rounded" style={{ background: ACCENT }}>
-                          Shop
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className="text-sm text-gray-600">No related products found.</div>
-          )}
-        </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {related.map((item) => (
+              <Link key={item._id} href={`/all-shop-products/${item.slug || item._id}`} className="group">
+                <div className="relative aspect-[3/4] overflow-hidden bg-neutral-50 mb-4">
+                  <Image 
+                    src={item.image[0]} 
+                    alt={item.name} 
+                    fill 
+                    className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                  />
+                </div>
+                <h3 className="font-serif text-lg tracking-tight group-hover:text-[#C9A35A] transition-colors">{item.name}</h3>
+                <p className="text-sm font-light mt-1">R {item.price?.toLocaleString()}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );
