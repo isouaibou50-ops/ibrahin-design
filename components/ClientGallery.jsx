@@ -6,10 +6,10 @@ import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Heart } from "lucide-react
 
 // Assuming these are in your /public/videos folder
 const clientVideos = [
-  { id: 1, src: "/videos/client-1.mp4", client: "@Amina_CT", description: "Bespoke Agbada for the wedding season." },
-  { id: 2, src: "/videos/client-2.mp4", client: "@Kofi_Design", description: "Perfect fit for the Cape Town Jazz Fest." },
-  { id: 3, src: "/videos/client-3.mp4", client: "@Sarah_Style", description: "Custom tailored evening gown in silk." },
-  { id: 4, src: "/videos/client-4.mp4", client: "@Musa_Atelier", description: "Traditional prints met with modern lines." },
+  { id: 1, src: "/videos/client-1.mp4", client: "@IB Tailoring", description: "Bespoke Agbada for the wedding season." },
+  { id: 2, src: "/videos/client-2.mp4", client: "@IbrahimDesigns", description: "Perfect fit for the Cape Town Jazz Fest." },
+  { id: 3, src: "/videos/client-1.mp4", client: "@IB Tailoring", description: "Custom tailored evening gown in silk." },
+  { id: 4, src: "/videos/client-2.mp4", client: "@IbrahimDesigns", description: "Traditional prints met with modern lines." },
 ];
 
 export default function ClientGallery() {
@@ -118,13 +118,38 @@ export default function ClientGallery() {
   );
 }
 
+
+
+
 function VideoCard({ video, onClick }) {
   const videoRef = useRef(null);
+  const [hasError, setHasError] = useState(false);
+  const playPromiseRef = useRef(null);
 
-  const handleMouseEnter = () => videoRef.current?.play();
-  const handleMouseLeave = () => {
-    videoRef.current?.pause();
-    videoRef.current.currentTime = 0;
+  const handleMouseEnter = async () => {
+    // If the file is 404, do not attempt to play
+    if (!videoRef.current || hasError) return;
+
+    try {
+      playPromiseRef.current = videoRef.current.play();
+      await playPromiseRef.current;
+    } catch (err) {
+      // Catching the AbortError or NotSupportedError locally
+      console.log("Playback blocked: Asset missing or interrupted.");
+    }
+  };
+
+  const handleMouseLeave = async () => {
+    if (playPromiseRef.current) {
+      try {
+        await playPromiseRef.current;
+      } catch (e) {}
+      playPromiseRef.current = null;
+    }
+    if (videoRef.current && !hasError) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
   };
 
   return (
@@ -132,20 +157,28 @@ function VideoCard({ video, onClick }) {
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="relative aspect-[9/16] bg-neutral-100 overflow-hidden cursor-pointer group"
+      className="relative aspect-[9/16] bg-neutral-100 overflow-hidden cursor-pointer group shadow-sm"
     >
-      <video
-        ref={videoRef}
-        src={video.src}
-        muted
-        loop
-        playsInline
-        className="h-full w-full object-cover transition-transform duration-[2s] group-hover:scale-110"
-      />
-      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
-      <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-        <p className="text-[10px] font-bold tracking-widest uppercase">View Reel</p>
-      </div>
+      {hasError ? (
+        <div className="h-full w-full flex flex-col items-center justify-center p-6 text-center bg-neutral-50 border border-neutral-100">
+          <p className="text-[8px] text-neutral-400 uppercase tracking-[0.2em]">
+            Asset Missing:<br/>{video.src}
+          </p>
+        </div>
+      ) : (
+        <video
+          ref={videoRef}
+          src={video.src}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          // This is the key: Catch the error before it becomes a 'Runtime Error'
+          onError={() => setHasError(true)}
+          className="h-full w-full object-cover transition-transform duration-[2s] group-hover:scale-105"
+        />
+      )}
+      <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
     </motion.div>
   );
 }
