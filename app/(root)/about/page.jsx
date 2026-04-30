@@ -143,7 +143,7 @@ export default function AboutPage() {
             href="/contact"
             className="inline-flex items-center gap-3 px-12 py-5 bg-[#1A1A1A] text-white text-[10px] tracking-[0.4em] uppercase font-bold hover:bg-[#C9A35A] transition-all duration-300"
           >
-            Request a Fitting <ArrowRight className="w-4 h-4" />
+            Make an Appointment <ArrowRight className="w-4 h-4" />
           </Link>
         </motion.section>
       </div>

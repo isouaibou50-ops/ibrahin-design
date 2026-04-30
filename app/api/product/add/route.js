@@ -4,6 +4,8 @@ import authSeller from "@/lib/authSeller";
 import { NextResponse } from "next/server";
 import connectDB from "@/config/db";
 import Product from "@/models/Product";
+import { postToFacebook } from "@/lib/facebook";
+import { postToInstagram } from "@/lib/instagram";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -33,7 +35,7 @@ export async function POST(request) {
 
         const files = formData.getAll('images');
 
-        if (!files || files.lenth === 0) {
+        if (!files || files.length === 0) {
             return NextResponse.json({ succes: false, message: 'no files uploaded'})
         }
 
@@ -72,7 +74,8 @@ export async function POST(request) {
             image,
             date: Date.now()
         })
-
+        postToFacebook(newProduct);
+        postToInstagram(newProduct);
         return NextResponse.json({ success: true, message: 'Uploade successfull', newProduct})
 
     } catch (error) {

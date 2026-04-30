@@ -25,7 +25,7 @@ export default function ClientGallery() {
         </div>
 
         {/* INSTAGRAM GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
           {clientVideos.map((video, index) => (
             <VideoCard 
               key={video.id} 

@@ -30,7 +30,6 @@ import upload_area from "./upload_area.png";
 import asus_laptop_image from "./asus_laptop_image.png";
 import projector_image from "./projector_image.png";
 import md_controller_image from "./md_controller_image.png";
-import sm_controller_image from "./sm_controller_image.png";
 import tailor_craft_image from "./tailor_craft_image.jpg";
 import african_attire_image from "./african_attire_image.webp"
 import men_collection_image from "./men.webp";
@@ -87,8 +86,6 @@ export const assets = {
   asus_laptop_image,
   projector_image,
  
-  md_controller_image,
-  sm_controller_image,
 
   
   checkmark

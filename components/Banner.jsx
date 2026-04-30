@@ -7,7 +7,7 @@ import Link from "next/link";
 import { PhoneCall, ArrowRight } from "lucide-react";
 
 const ACCENT = "#C9A35A";
-const WHATSAPP_NUMBER = "27641234567"; // Cape Town localized
+const WHATSAPP_NUMBER = "27837212432"; // Cape Town localized 083 721 2432083 721 2432
 
 const Banner = () => {
   const handleWhatsApp = () => {
