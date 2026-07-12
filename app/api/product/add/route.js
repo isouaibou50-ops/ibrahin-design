@@ -74,8 +74,11 @@ export async function POST(request) {
             image,
             date: Date.now()
         })
+        
+
         postToFacebook(newProduct);
         postToInstagram(newProduct);
+
         return NextResponse.json({ success: true, message: 'Uploade successfull', newProduct})
 
     } catch (error) {

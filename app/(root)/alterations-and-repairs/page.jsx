@@ -6,7 +6,7 @@ import { Info, PhoneCall, X, Scissors } from "lucide-react";
 import Image from "next/image";
 
 const ACCENT = "#C5A34A";
-const WHATSAPP_NUMBER = "27641234567"; // replace with your number
+const WHATSAPP_NUMBER = "27837212423"; // replace with your number
 
 // // ✅ SEO Metadata
 // export const metadata = {
