@@ -237,83 +237,243 @@ const Navbar = () => {
       </AnimatePresence>
 
       {/* MOBILE NAV DRAWER */}
-<AnimatePresence>
-  {menuOpen && (
-    <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={() => setMenuOpen(false)}
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
-      />
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Cinematic Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              onClick={() => setMenuOpen(false)}
+              className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-xl"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(201,163,90,0.12),transparent_45%)]" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40" />
+            </motion.div>
 
-      <motion.aside
-        initial={{ x: "-100%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "-100%" }}
-        transition={{
-          type: "spring",
-          damping: 28,
-          stiffness: 200,
-        }}
-        className="fixed top-0 left-0 h-screen w-[320px] bg-white z-[101] shadow-2xl flex flex-col"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <span className="font-serif text-xl tracking-wide">
-            Ibrahim Design
-          </span>
+            {/* Sidebar */}
+            <motion.aside
+              initial={{
+                x: "-110%",
+                opacity: 0,
+                scale: 0.97,
+              }}
+              animate={{
+                x: 0,
+                opacity: 1,
+                scale: 1,
+              }}
+              exit={{
+                x: "-110%",
+                opacity: 0,
+                scale: 0.98,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 140,
+                damping: 22,
+              }}
+              className="
+                fixed
+                top-0
+                left-0
+                z-[101]
+                h-screen
+                w-[340px]
+                overflow-hidden
+                border-r
+                border-white/10
+                bg-white/90
+                backdrop-blur-2xl
+                shadow-[0_20px_80px_rgba(0,0,0,0.45)]
+                flex
+                flex-col
+              "
+            >
+              {/* Animated Gold Accent */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.15, duration: 0.6 }}
+                className="h-[2px] origin-left bg-gradient-to-r from-[#C9A35A] via-yellow-300 to-transparent"
+              />
 
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="p-2 hover:bg-gray-100 rounded-full"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+              {/* Decorative Glow */}
+              <div className="absolute -top-32 -left-32 h-72 w-72 rounded-full bg-[#C9A35A]/10 blur-3xl" />
 
-        {/* Links */}
-        <nav className="flex-1 px-6 py-8">
-          <div className="space-y-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="block text-sm tracking-[0.25em] uppercase hover:text-[#C9A35A] transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+              {/* Header */}
+              <div className="relative flex items-center justify-between px-7 py-6 border-b border-black/5">
+                <motion.span
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                  className="font-serif text-2xl tracking-[0.18em]"
+                >
+                  Ibrahim Design
+                </motion.span>
 
-          <div className="mt-12 border-t pt-8">
-            {user ? (
-              <Link
-                href={dashboardRoute}
-                onClick={() => setMenuOpen(false)}
-                className="block text-sm tracking-[0.25em] uppercase hover:text-[#C9A35A]"
-              >
-                Dashboard
-              </Link>
-            ) : (
-              <button
-                onClick={() => {
-                  setMenuOpen(false);
-                  openSignIn();
-                }}
-                className="text-sm tracking-[0.25em] uppercase hover:text-[#C9A35A]"
-              >
-                Sign In
-              </button>
-            )}
-          </div>
-        </nav>
-      </motion.aside>
-    </>
-  )}
-</AnimatePresence>
+                <motion.button
+                  whileHover={{
+                    rotate: 90,
+                    scale: 1.08,
+                  }}
+                  whileTap={{ scale: 0.92 }}
+                  onClick={() => setMenuOpen(false)}
+                  className="
+                    rounded-full
+                    p-3
+                    transition
+                    bg-black/[0.04]
+                    hover:bg-black/[0.08]
+                  "
+                >
+                  <X className="h-5 w-5" />
+                </motion.button>
+              </div>
+
+              {/* Navigation */}
+              <nav className="relative flex-1 px-8 py-10">
+                <div className="space-y-2">
+                  {navLinks.map((link, index) => (
+                    <motion.div
+                      key={link.label}
+                      initial={{
+                        opacity: 0,
+                        x: -25,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                      }}
+                      transition={{
+                        delay: 0.15 + index * 0.07,
+                      }}
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={() => setMenuOpen(false)}
+                        className="
+                          group
+                          relative
+                          flex
+                          items-center
+                          overflow-hidden
+                          rounded-xl
+                          px-4
+                          py-4
+                          uppercase
+                          tracking-[0.30em]
+                          text-sm
+                          transition-all
+                          duration-300
+                          hover:bg-[#C9A35A]/8
+                        "
+                      >
+                        <span
+                          className="
+                            absolute
+                            left-0
+                            top-1/2
+                            h-0
+                            w-1
+                            -translate-y-1/2
+                            rounded-full
+                            bg-[#C9A35A]
+                            transition-all
+                            duration-300
+                            group-hover:h-8
+                          "
+                        />
+
+                        <span
+                          className="
+                            transition-all
+                            duration-300
+                            group-hover:translate-x-3
+                            group-hover:text-[#C9A35A]
+                          "
+                        >
+                          {link.label}
+                        </span>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Bottom Section */}
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    delay: 0.55,
+                  }}
+                  className="mt-14 border-t border-black/10 pt-8"
+                >
+                  {user ? (
+                    <Link
+                      href={dashboardRoute}
+                      onClick={() => setMenuOpen(false)}
+                      className="
+                        group
+                        flex
+                        items-center
+                        rounded-xl
+                        px-4
+                        py-4
+                        uppercase
+                        tracking-[0.30em]
+                        text-sm
+                        transition-all
+                        duration-300
+                        hover:bg-[#C9A35A]/8
+                      "
+                    >
+                      <span className="transition-all group-hover:translate-x-3 group-hover:text-[#C9A35A]">
+                        Dashboard
+                      </span>
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                        openSignIn();
+                      }}
+                      className="
+                        group
+                        flex
+                        w-full
+                        items-center
+                        rounded-xl
+                        px-4
+                        py-4
+                        uppercase
+                        tracking-[0.30em]
+                        text-left
+                        text-sm
+                        transition-all
+                        duration-300
+                        hover:bg-[#C9A35A]/8
+                      "
+                    >
+                      <span className="transition-all group-hover:translate-x-3 group-hover:text-[#C9A35A]">
+                        Sign In
+                      </span>
+                    </button>
+                  )}
+                </motion.div>
+              </nav>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };
