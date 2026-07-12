@@ -109,7 +109,7 @@ export default function AlterationsAndRepairsPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen pt-32">
+    <div className="bg-white min-h-screen pt-16">
       {/* Hero Section */}
       {/* Hero Section */}
               <motion.section
