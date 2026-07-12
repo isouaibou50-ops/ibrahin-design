@@ -235,6 +235,85 @@ const Navbar = () => {
           </>
         )}
       </AnimatePresence>
+
+      {/* MOBILE NAV DRAWER */}
+<AnimatePresence>
+  {menuOpen && (
+    <>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setMenuOpen(false)}
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
+      />
+
+      <motion.aside
+        initial={{ x: "-100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "-100%" }}
+        transition={{
+          type: "spring",
+          damping: 28,
+          stiffness: 200,
+        }}
+        className="fixed top-0 left-0 h-screen w-[320px] bg-white z-[101] shadow-2xl flex flex-col"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b">
+          <span className="font-serif text-xl tracking-wide">
+            Ibrahim Design
+          </span>
+
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="p-2 hover:bg-gray-100 rounded-full"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Links */}
+        <nav className="flex-1 px-6 py-8">
+          <div className="space-y-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="block text-sm tracking-[0.25em] uppercase hover:text-[#C9A35A] transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-12 border-t pt-8">
+            {user ? (
+              <Link
+                href={dashboardRoute}
+                onClick={() => setMenuOpen(false)}
+                className="block text-sm tracking-[0.25em] uppercase hover:text-[#C9A35A]"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  openSignIn();
+                }}
+                className="text-sm tracking-[0.25em] uppercase hover:text-[#C9A35A]"
+              >
+                Sign In
+              </button>
+            )}
+          </div>
+        </nav>
+      </motion.aside>
+    </>
+  )}
+</AnimatePresence>
     </>
   );
 };
