@@ -2,9 +2,10 @@
 import React from "react";
 import { Inter, Playfair_Display, Cormorant_Garamond } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import WhatsAppWidget from "@/components/WhatsAppWidget"; 
 import "./globals.css";
 
-// Fonts
+// 1. Clean, Single Font Declarations
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -26,21 +27,65 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+// 2. Mobile-First App Performance Settings
+export const viewport = {
+  themeColor: "#050507",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
+// 3. Advanced Local SEO & Target Keywords Matching
 export const metadata = {
-  title: "Ibrahim Design | African Tailoring in Cape Town | Tailor in Cape Town",
+  title: {
+    default: "Ibrahim Design | Bespoke Tailor Shop Cape Town CBD",
+    template: "%s | Ibrahim Design",
+  },
   description:
-    "Bespoke African fashion by Ibrahim Design. Custom Design, African Culture, custom boubous, agbadas, shirts & dresses made in Cape Town.",
-  keywords: ["couture", "fashion", "evening gowns", "luxury", "designer", "haute couture"],
+    "Premium bespoke suits, luxury African traditional wear, custom boubous, and professional clothing alterations on Long Street, Cape Town CBD. Perfect fit guaranteed.",
+  keywords: [
+    "bespoke tailor cape town",
+    "suit alterations cape town cbd",
+    "clothing alterations long street",
+    "african traditional wear tailor cape town",
+    "custom suits cape town",
+    "couture",
+    "evening gowns",
+    "luxury designer"
+  ],
+  metadataBase: new URL("https://ibrahimdesign.co.za"),
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/ibrahimdesign-logo.png",
     shortcut: "/ibrahimdesign-logo.png",
     apple: "/ibrahimdesign-logo.png",
   },
+  openGraph: {
+    title: "Ibrahim Design | Bespoke Tailor Shop Cape Town CBD",
+    description: "Bespoke African fashion, custom suits, and expert alterations on Long Street.",
+    url: "https://ibrahimdesign.co.za",
+    siteName: "Ibrahim Design",
+    locale: "en_ZA",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider appearance={{ colorPrimary: "#1A1A1A" }}>
+    <ClerkProvider appearance={{ colorPrimary: "#D4AF37" }}>
       <html lang="en" className="scroll-smooth">
         <body
           className={`
@@ -49,13 +94,34 @@ export default function RootLayout({ children }) {
             ${playfair.variable}
             font-sans
             antialiased
-            bg-white
-            text-neutral-900
+            bg-[#050507] 
+            text-[#f4f4f6]
+            min-h-screen
+            overflow-x-hidden
+            relative
           `}
         >
-          {children}
+          {/* Ambient Futuristic Background Mesh */}
+          <div className="fixed inset-0 -z-50 overflow-hidden pointer-events-none">
+            <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vh] rounded-full bg-amber-500/5 blur-[100px]" />
+            <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vh] rounded-full bg-neutral-800/20 blur-[100px]" />
+          </div>
+
+          {/* Main Content Layout */}
+          <main className="relative z-10 min-h-screen w-full">
+            {children}
+          </main>
+
+          {/* Floating On-Site WhatsApp Widget */}
+          <WhatsAppWidget />
         </body>
       </html>
     </ClerkProvider>
   );
 }
+
+
+
+
+
+
