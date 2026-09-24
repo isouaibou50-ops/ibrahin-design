@@ -320,7 +320,7 @@ export default function ServicesPage() {
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#c9a35a]/30 bg-[#c9a35a]/5 text-[#c9a35a] text-xs font-medium tracking-widest uppercase mb-4"
           >
             <Sparkles size={12} />
-            Long Street Atelier
+            Cape Town Atelier
           </motion.div>
 
           <motion.h1

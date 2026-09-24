@@ -38,7 +38,7 @@ export default function WhatsAppWidget() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-sm leading-tight text-neutral-100">Ibrahim Design</h4>
-                  <p className="text-[11px] text-amber-400/80 font-medium tracking-wide mt-0.5">LONG STREET ATELIER</p>
+                  <p className="text-[11px] text-amber-400/80 font-medium tracking-wide mt-0.5">CAPE TOWN ATELIER</p>
                 </div>
               </div>
               <button 
