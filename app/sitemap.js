@@ -1,0 +1,81 @@
+// app/sitemap.js
+
+export default function sitemap() {
+  const baseUrl = "https://www.ibrahimdesign.co.za";
+
+  // Active high-performing keywords injected for structural indexing weight
+  const trackingKeywords = [
+    "best-tailor-in-cape-town",
+    "suit-alterations-cape-town",
+    "bespoke-tailor-cape-town",
+    "wedding-dress-alterations",
+    "clothing-alterations-near-me",
+    "dress-alterations-near-me",
+    "tailor-near-me",
+    "alterations-near-me",
+    "tailor-made-suits-near-me",
+    "same-day-tailor-near-me",
+    "seamstress-near-me",
+    "mens-tailor-near-me",
+    "bespoke-suits-near-me",
+    "bespoke-tailor-near-me",
+    "tux-fitting-near-me",
+    "custom-dress-shirts-near-me",
+    "tailor-shop-near-me",
+    "wedding-dress-alterations-near-me",
+    "suit-makers-near-me",
+    "dress-tailor-near-me",
+    "dress-hemming-near-me",
+    "best-tailors-near-me",
+    "custom-tailor-near-me",
+    "blouse-stitching-near-me",
+    "dressmaker-near-me",
+    "zipper-repair-near-me",
+    "curtain-alterations-near-me",
+    "tailor-made-suits-cape-town",
+    "jacket-repair-near-me",
+    "custom-suits-near-me",
+    "suit-tailor-near-me",
+    "seamstress-cape-town",
+    "made-to-measure-suits-near-me",
+    "dress-alterations-cape-town",
+    "ladies-tailor-near-me",
+    "suit-fitting-near-me",
+    "custom-tuxedo-near-me",
+    "custom-suits-cape-town",
+    "dress-makers-near-me",
+    "custom-mens-suits-near-me",
+    "tailor-cape-town-cbd",
+    "dressmakers-cape-town",
+    "same-day-tailor-near-me-tux-fitting-near-me",
+    "uniform-tailoring-cape-town",
+    "traditional-wear-designers-cape-town",
+    "custom-traditional-dresses-cape-town",
+    "kente-bow-tie-cape-town",
+    "tailor-long-street",
+    "suit-tailoring-cape-town-cbd",
+    "clothing-alterations-long-street",
+    "custom-suits-cape-town-cbd",
+    "african-print-shirts-custom",
+    "clothing-repair-cape-town",
+    "pants-hemming-cape-town-cbd",
+    "african-traditional-wear-tailor-cape-town",
+    "custom-shweshwe-dresses",
+    "african-design-tailor-long-street"
+  ];
+
+  return [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/services`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+  ];
+}
