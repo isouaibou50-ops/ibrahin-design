@@ -1,5 +1,5 @@
 "use client";
-
+import { trackWhatsAppConversion } from "@/utils/analytics";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -241,17 +241,21 @@ const CATEGORIES = [
 
 const WHATSAPP_NUMBER = "27837212432";
 
+
+
+// 2. Update your openWhatsApp function to look exactly like this:
 function openWhatsApp(serviceTitle) {
   const message = serviceTitle
     ? `Hello Ibrahim Design, I am on your website and would like to book an appointment or request a quote for: ${serviceTitle}.`
     : "Hello Ibrahim Design, I am on your website and would like to inquire about your tailoring and alteration services.";
 
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    message
-  )}`;
+  // Execute Google Ads conversion script safely on client interaction
+  trackWhatsAppConversion(serviceTitle || "Main Chat Floating Widget");
 
+  const url = `https://wa.me{WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank", "noopener,noreferrer");
 }
+
 
 // ─────────────────────────────────────────────────────────────
 // MAIN PAGE RENDERING

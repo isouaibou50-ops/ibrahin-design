@@ -1,0 +1,17 @@
+// utils/analytics.js
+
+/**
+ * Programmatically dispatches a verified conversion trigger straight to Google Ads auction loops.
+ * @param {string} serviceName - The title variant of the clicked tailoring or alteration item.
+ */
+export const trackWhatsAppConversion = (serviceName = "General Inquiry") => {
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag("event", "conversion", {
+      send_to: "AW-11111111111/XxxX-XXxxXXxxXXxxXX", // <-- REPLACE WITH YOUR CONVERSION ID AND EXACT ACTION LABEL
+      event_category: "Lead Acquisition",
+      event_label: serviceName,
+      value: 1.0,
+      currency: "ZAR",
+    });
+  }
+};

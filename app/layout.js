@@ -4,6 +4,7 @@ import { Inter, Playfair_Display, Cormorant_Garamond } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import WhatsAppWidget from "@/components/WhatsAppWidget"; 
 import "./globals.css";
+import GoogleAdsScript from "@/components/GoogleAdsScript";
 
 // 1. Clean, Single Font Declarations
 const inter = Inter({
@@ -149,6 +150,7 @@ export default function RootLayout({ children }) {
             relative
           `}
         >
+           <GoogleAdsScript />
           {/* Ambient Futuristic Background Mesh */}
           <div className="fixed inset-0 -z-50 overflow-hidden pointer-events-none">
             <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vh] rounded-full bg-amber-500/5 blur-[100px]" />
