@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Scissors,
   Ruler,
@@ -32,8 +32,7 @@ const SERVICES_DATA = [
       "Careful finishing and inspection",
     ],
     icon: Scissors,
-    gradient:
-      "from-amber-500/20 via-orange-600/5 to-transparent",
+    gradient: "from-amber-500/20 via-orange-600/5 to-transparent",
   },
   {
     id: "invisible-seams",
@@ -50,8 +49,7 @@ const SERVICES_DATA = [
       "Detailed finishing",
     ],
     icon: Sparkles,
-    gradient:
-      "from-violet-500/20 via-fuchsia-600/5 to-transparent",
+    gradient: "from-violet-500/20 via-fuchsia-600/5 to-transparent",
   },
   {
     id: "childrens-alterations",
@@ -68,8 +66,7 @@ const SERVICES_DATA = [
       "Repairs and garment refinements",
     ],
     icon: Shirt,
-    gradient:
-      "from-blue-500/20 via-cyan-600/5 to-transparent",
+    gradient: "from-blue-500/20 via-cyan-600/5 to-transparent",
   },
   {
     id: "leather-repair",
@@ -86,8 +83,7 @@ const SERVICES_DATA = [
       "Careful finishing",
     ],
     icon: Scissors,
-    gradient:
-      "from-stone-500/20 via-neutral-600/5 to-transparent",
+    gradient: "from-stone-500/20 via-neutral-600/5 to-transparent",
   },
   {
     id: "mens-alterations",
@@ -104,8 +100,7 @@ const SERVICES_DATA = [
       "Professional finishing",
     ],
     icon: Ruler,
-    gradient:
-      "from-slate-500/20 via-blue-600/5 to-transparent",
+    gradient: "from-slate-500/20 via-blue-600/5 to-transparent",
   },
   {
     id: "trouser-alterations",
@@ -122,8 +117,7 @@ const SERVICES_DATA = [
       "Seat and fit refinements",
     ],
     icon: Ruler,
-    gradient:
-      "from-emerald-500/20 via-teal-600/5 to-transparent",
+    gradient: "from-emerald-500/20 via-teal-600/5 to-transparent",
   },
   {
     id: "shirt-tailoring",
@@ -140,8 +134,7 @@ const SERVICES_DATA = [
       "Professional tailored finishing",
     ],
     icon: Shirt,
-    gradient:
-      "from-cyan-500/20 via-sky-600/5 to-transparent",
+    gradient: "from-cyan-500/20 via-sky-600/5 to-transparent",
   },
   {
     id: "suit-tailoring",
@@ -158,8 +151,7 @@ const SERVICES_DATA = [
       "Complete suit fitting",
     ],
     icon: Ruler,
-    gradient:
-      "from-amber-500/20 via-yellow-600/5 to-transparent",
+    gradient: "from-amber-500/20 via-yellow-600/5 to-transparent",
   },
   {
     id: "uniform-tailoring",
@@ -176,8 +168,7 @@ const SERVICES_DATA = [
       "Bulk tailoring available",
     ],
     icon: Shirt,
-    gradient:
-      "from-indigo-500/20 via-blue-600/5 to-transparent",
+    gradient: "from-indigo-500/20 via-blue-600/5 to-transparent",
   },
   {
     id: "waist-adjustments",
@@ -194,8 +185,7 @@ const SERVICES_DATA = [
       "Clean internal finishing",
     ],
     icon: Ruler,
-    gradient:
-      "from-rose-500/20 via-pink-600/5 to-transparent",
+    gradient: "from-rose-500/20 via-pink-600/5 to-transparent",
   },
   {
     id: "wedding-dress-alterations",
@@ -212,8 +202,7 @@ const SERVICES_DATA = [
       "Delicate detailing and finishing",
     ],
     icon: Sparkles,
-    gradient:
-      "from-pink-500/20 via-rose-600/5 to-transparent",
+    gradient: "from-pink-500/20 via-rose-600/5 to-transparent",
   },
   {
     id: "womens-alterations",
@@ -230,8 +219,7 @@ const SERVICES_DATA = [
       "Professional finishing",
     ],
     icon: Scissors,
-    gradient:
-      "from-fuchsia-500/20 via-purple-600/5 to-transparent",
+    gradient: "from-fuchsia-500/20 via-purple-600/5 to-transparent",
   },
 ];
 
@@ -240,38 +228,23 @@ const SERVICES_DATA = [
 // ─────────────────────────────────────────────────────────────
 
 const CATEGORIES = [
-  {
-    id: "all",
-    label: "All Services",
-  },
-  {
-    id: "tailoring",
-    label: "Tailoring",
-  },
-  {
-    id: "alterations",
-    label: "Alterations",
-  },
-  {
-    id: "repairs",
-    label: "Repairs",
-  },
-  {
-    id: "bridal",
-    label: "Bridal",
-  },
+  { id: "all", label: "All Services" },
+  { id: "tailoring", label: "Tailoring" },
+  { id: "alterations", label: "Alterations" },
+  { id: "repairs", label: "Repairs" },
+  { id: "bridal", label: "Bridal" },
 ];
 
 // ─────────────────────────────────────────────────────────────
-// WHATSAPP
+// WHATSAPP HELPER
 // ─────────────────────────────────────────────────────────────
 
 const WHATSAPP_NUMBER = "27837212432";
 
-function openWhatsApp(service) {
-  const message = service
-    ? `Hello, I would like to enquire about ${service}.`
-    : "Hello, I would like to enquire about your tailoring and alteration services.";
+function openWhatsApp(serviceTitle) {
+  const message = serviceTitle
+    ? `Hello Ibrahim Design, I am on your website and would like to book an appointment or request a quote for: ${serviceTitle}.`
+    : "Hello Ibrahim Design, I am on your website and would like to inquire about your tailoring and alteration services.";
 
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     message
@@ -281,322 +254,228 @@ function openWhatsApp(service) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// PAGE
+// MAIN PAGE RENDERING
 // ─────────────────────────────────────────────────────────────
 
 export default function ServicesPage() {
   const [activeTab, setActiveTab] = useState("all");
 
   const filteredServices = SERVICES_DATA.filter(
-    (service) =>
-      activeTab === "all" || service.category === activeTab
+    (service) => activeTab === "all" || service.category === activeTab
   );
 
   return (
-    <main className="min-h-screen py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* ─────────────────────────────────────────────────────
-          BACKGROUND
-      ───────────────────────────────────────────────────── */}
+    <div className="relative min-h-screen overflow-hidden bg-[#050507] px-4 py-24 select-none sm:px-6 lg:px-8">
+      {/* Background Interactive Ambient Overlay */}
+      <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-full max-w-7xl -translate-x-1/2">
+        <div className="absolute left-10 top-10 h-72 w-72 rounded-full bg-[#c9a35a]/5 blur-[100px]" />
 
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none -z-10">
-        <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-[#c9a35a]/5 blur-[100px]" />
+        <div className="absolute right-10 top-1/3 h-96 w-96 rounded-full bg-violet-600/5 blur-[120px]" />
 
-        <div className="absolute top-1/3 right-10 w-96 h-96 rounded-full bg-violet-600/5 blur-[120px]" />
-
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="max-w-6xl mx-auto">
-
-        {/* ─────────────────────────────────────────────────────
-            HEADER
-        ───────────────────────────────────────────────────── */}
-
-        <div className="text-center mb-16">
+      <div className="mx-auto max-w-6xl">
+        {/* Heading */}
+        <div className="mb-16 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#c9a35a]/30 bg-[#c9a35a]/5 text-[#c9a35a] text-xs font-medium tracking-widest uppercase mb-4"
+            transition={{ duration: 0.5 }}
+            className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#c9a35a]/30 bg-[#c9a35a]/5 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-[#c9a35a]"
           >
-            <Sparkles size={12} />
-            Cape Town Atelier
+            <Sparkles size={10} />
+            Bespoke Tailor Shop Long Street
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.6,
-              delay: 0.1,
-            }}
-            className="text-4xl sm:text-6xl font-serif text-white mb-6 font-medium tracking-tight"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mb-6 font-serif text-3xl font-medium tracking-tight text-white sm:text-5xl lg:text-6xl"
           >
-            Precision{" "}
-            <span className="text-[#c9a35a] font-normal italic">
-              Tailoring
-            </span>{" "}
-            & Alterations
+            Premium Suit Alterations &{" "}
+            <span className="font-normal italic text-[#c9a35a]">
+              Custom Styling
+            </span>
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.6,
-              delay: 0.2,
-            }}
-            className="text-neutral-400 max-w-2xl mx-auto text-sm sm:text-base font-light leading-relaxed"
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mx-auto max-w-2xl text-xs font-light leading-relaxed text-neutral-400 sm:text-sm"
           >
-            From everyday repairs to bespoke tailoring and delicate
-            bridal alterations, every garment receives careful attention
-            and professional finishing.
+            Welcome to Ibrahim Design. Tap any atelier service below to connect
+            with us directly on WhatsApp for real-time answers, instant quotes,
+            or custom fittings in Cape Town CBD.
           </motion.p>
         </div>
 
-        {/* ─────────────────────────────────────────────────────
-            FILTERS
-        ───────────────────────────────────────────────────── */}
+        {/* Tab Selection Filter System */}
+        <div className="mb-10 flex flex-wrap items-center justify-center gap-2">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeTab === cat.id;
 
-        <div className="flex justify-center mb-16 overflow-x-auto pb-4 max-w-full">
-          <div className="flex gap-2 p-1.5 rounded-xl bg-[#0d0d12] border border-white/5 shadow-inner backdrop-blur-md whitespace-nowrap">
-            {CATEGORIES.map((cat) => {
-              const isActive = activeTab === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveTab(cat.id)}
+                className={`relative cursor-pointer rounded-lg px-4 py-2 text-xs font-medium uppercase tracking-wide transition-all duration-300 ${
+                  isActive
+                    ? "font-semibold text-black"
+                    : "text-neutral-400 hover:text-white"
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeFilterBg"
+                    className="absolute inset-0 rounded-lg bg-[#c9a35a] shadow-lg shadow-[#c9a35a]/20"
+                    transition={{
+                      type: "spring",
+                      stiffness: 380,
+                      damping: 30,
+                    }}
+                  />
+                )}
 
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setActiveTab(cat.id)}
-                  className={`relative px-4 py-2.5 rounded-lg text-xs font-medium tracking-wide uppercase transition-all duration-300 cursor-pointer ${
-                    isActive
-                      ? "text-black font-semibold"
-                      : "text-neutral-400 hover:text-white"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeFilterBg"
-                      className="absolute inset-0 bg-[#c9a35a] rounded-lg shadow-lg shadow-[#c9a35a]/20"
-                      transition={{
-                        type: "spring",
-                        stiffness: 380,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-
-                  <span className="relative z-10">
-                    {cat.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+                <span className="relative z-10">{cat.label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* ─────────────────────────────────────────────────────
-            SERVICE GRID
-        ───────────────────────────────────────────────────── */}
-
+        {/* Dynamic Services Grid */}
         <motion.div
           layout
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch mb-20"
+          className="mb-16 grid grid-cols-1 items-stretch gap-6 md:grid-cols-2"
         >
-          <AnimatePresence mode="popLayout">
-            {filteredServices.map((service) => {
-              const IconComponent = service.icon;
+          {filteredServices.map((service) => {
+            const IconComponent = service.icon;
 
-              return (
-                <motion.article
-                  layout
-                  key={service.id}
-                  initial={{
-                    opacity: 0,
-                    scale: 0.98,
-                    y: 10,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    scale: 1,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    scale: 0.95,
-                    y: -10,
-                  }}
-                  transition={{
-                    duration: 0.4,
-                  }}
-                  className="group relative rounded-2xl border border-white/5 bg-[#0b0b0f] overflow-hidden flex flex-col justify-between p-6 sm:p-8 hover:border-[#c9a35a]/30 transition-all duration-300 hover:shadow-2xl hover:shadow-[#c9a35a]/5"
-                >
-                  {/* Gradient */}
+            return (
+              <motion.div
+                layout
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+                key={service.id}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/5 bg-[#0b0b0f] p-6 transition-all duration-300 hover:border-[#c9a35a]/30 hover:shadow-2xl hover:shadow-[#c9a35a]/5 sm:p-8"
+              >
+                {/* Hover Gradient */}
+                <div
+                  className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
+                />
 
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
-                  />
-
-                  {/* Content */}
-
-                  <div className="relative z-10">
-
-                    {/* Icon */}
-
-                    <div className="flex justify-between items-start mb-6 gap-4">
-                      <div className="p-3 rounded-xl bg-white/5 text-[#c9a35a] border border-white/5 group-hover:bg-[#c9a35a] group-hover:text-black transition-all duration-300">
-                        <IconComponent
-                          size={20}
-                          strokeWidth={1.7}
-                        />
-                      </div>
-
-                      <div className="text-right">
-                        
-
-                        <span className="block text-[10px] text-neutral-500 uppercase tracking-widest mt-1 group-hover:text-amber-400/80 transition-colors">
-                          {service.timeframe}
-                        </span>
-                      </div>
+                {/* Content */}
+                <div className="relative z-10">
+                  {/* Top Meta */}
+                  <div className="mb-6 flex items-center justify-between gap-4">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#c9a35a]/20 bg-[#c9a35a]/5 text-[#c9a35a]">
+                      <IconComponent size={20} strokeWidth={1.5} />
                     </div>
 
-                    {/* Title */}
+                    <div className="text-right">
+                      <p className="text-[10px] font-semibold uppercase tracking-widest text-[#c9a35a]">
+                        {service.price}
+                      </p>
 
-                    <h2 className="text-xl font-serif font-medium text-white mb-2 tracking-wide group-hover:text-[#c9a35a] transition-colors">
-                      {service.title}
-                    </h2>
-
-                    {/* Description */}
-
-                    <p className="text-neutral-400 text-xs sm:text-sm font-light mb-6 leading-relaxed">
-                      {service.tagline}
-                    </p>
-
-                    {/* Features */}
-
-                    <ul className="space-y-3.5 mb-8">
-                      {service.features.map((feature, index) => (
-                        <li
-                          key={`${service.id}-${index}`}
-                          className="flex items-center gap-3 text-neutral-300 text-xs"
-                        >
-                          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#c9a35a]/10 text-[#c9a35a] flex-shrink-0">
-                            <Check size={9} strokeWidth={2.5} />
-                          </span>
-
-                          <span className="font-light">
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                      <p className="mt-1 text-[10px] uppercase tracking-wide text-neutral-500">
+                        {service.timeframe}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* CTA */}
+                  {/* Title */}
+                  <h2 className="mb-3 text-xl font-medium tracking-tight text-white sm:text-2xl">
+                    {service.title}
+                  </h2>
 
-                  <div className="relative z-10">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        openWhatsApp(service.title)
-                      }
-                      className="w-full py-3 px-4 rounded-xl bg-white/5 hover:bg-[#c9a35a] border border-white/5 text-white hover:text-black text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 group/btn cursor-pointer shadow-md"
-                    >
-                      <PhoneCall
-                        size={14}
-                        className="opacity-70 group-hover/btn:opacity-100"
-                      />
+                  {/* Tagline */}
+                  <p className="mb-6 text-sm font-light leading-relaxed text-neutral-400">
+                    {service.tagline}
+                  </p>
 
-                      <span>Enquire About This Service</span>
+                  {/* Features */}
+                  <div className="space-y-3">
+                    {service.features.map((feat, idx) => (
+                      <div
+                        key={`${service.id}-feature-${idx}`}
+                        className="flex items-start gap-3 text-xs text-neutral-300"
+                      >
+                        <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#c9a35a]/10 text-[#c9a35a]">
+                          <Check size={10} strokeWidth={2.5} />
+                        </span>
 
-                      <ChevronRight
-                        size={14}
-                        className="transform group-hover/btn:translate-x-1 transition-transform"
-                      />
-                    </button>
+                        <span>{feat}</span>
+                      </div>
+                    ))}
                   </div>
-                </motion.article>
-              );
-            })}
-          </AnimatePresence>
+                </div>
+
+                {/* WhatsApp CTA */}
+                <div className="relative z-10 mt-8">
+                  <button
+                    onClick={() => openWhatsApp(service.title)}
+                    className="group/btn flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-600/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-emerald-400 shadow-md transition-all duration-300 hover:bg-emerald-600 hover:text-white"
+                  >
+                    <PhoneCall size={14} />
+
+                    <span>Discuss on WhatsApp</span>
+
+                    <ChevronRight
+                      size={14}
+                      className="transition-transform duration-300 group-hover/btn:translate-x-1"
+                    />
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
         </motion.div>
 
-        {/* ─────────────────────────────────────────────────────
-            CONSULTATION CTA
-        ───────────────────────────────────────────────────── */}
-
-        <motion.section
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.3,
-          }}
-          transition={{
-            duration: 0.7,
-          }}
-          className="relative overflow-hidden rounded-3xl border border-[#c9a35a]/20 bg-[#0b0b0f] px-6 py-12 sm:px-12 sm:py-16 text-center"
+        {/* Master Micro-Conversion Layout Panel */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="relative overflow-hidden rounded-2xl border border-[#c9a35a]/20 bg-[#0b0b0f] p-8 text-center sm:p-12"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-[#c9a35a]/10 via-transparent to-violet-600/5 pointer-events-none" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#c9a35a]/10 via-transparent to-emerald-500/5" />
 
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 bg-[#c9a35a]/10 rounded-full blur-[100px] pointer-events-none" />
-
-          <div className="relative z-10 max-w-2xl mx-auto">
-
-            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#c9a35a]/30 bg-[#c9a35a]/5 text-[#c9a35a]">
-              <Ruler
-                size={20}
-                strokeWidth={1.5}
-              />
+          <div className="relative z-10">
+            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#c9a35a]/20 bg-[#c9a35a]/5 text-[#c9a35a]">
+              <Scissors size={20} />
             </div>
 
-            <p className="text-[#c9a35a] text-[10px] uppercase tracking-[0.3em] font-semibold mb-4">
-              Private Atelier Consultation
-            </p>
-
-            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
-              Let us make your garment{" "}
-              <span className="italic text-[#c9a35a]">
-                fit perfectly.
-              </span>
+            <h2 className="mb-4 font-serif text-2xl text-white sm:text-3xl">
+              Have a Specific Garment Request?
             </h2>
 
-            <p className="text-neutral-400 text-sm leading-relaxed mb-8 max-w-xl mx-auto">
-              Have a garment that needs attention? Speak directly with
-              our tailoring team about your repair, alteration or
-              custom tailoring requirements.
+            <p className="mx-auto mb-8 max-w-2xl text-sm font-light leading-relaxed text-neutral-400">
+              Connect instantly with our master tailors. We specialize in
+              custom African heritage cuts, fine suit restructuring, and fast
+              same-day corrections right here at Greenmarket Square.
             </p>
 
             <button
-              type="button"
-              onClick={() => openWhatsApp()}
-              className="inline-flex items-center justify-center gap-3 rounded-xl bg-[#c9a35a] text-black px-6 py-3.5 text-xs font-bold uppercase tracking-widest hover:bg-[#d8b76f] transition-all duration-300 shadow-xl shadow-[#c9a35a]/10 cursor-pointer"
+              onClick={() => openWhatsApp(null)}
+              className="mx-auto flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-emerald-600 px-8 py-3 text-xs font-semibold uppercase tracking-widest text-white shadow-xl shadow-emerald-950/20 transition-all duration-200 hover:bg-emerald-500 sm:w-auto"
             >
-              <PhoneCall size={15} />
-
-              Speak With Our Tailor
-
-              <ChevronRight size={15} />
+              <PhoneCall size={14} />
+              Start Main WhatsApp Booking
             </button>
+
+            <div className="mt-8 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.2em] text-neutral-500">
+              <PhoneCall size={12} />
+              Direct Studio Line
+            </div>
           </div>
-        </motion.section>
-
-        {/* ─────────────────────────────────────────────────────
-            FOOTER LABEL
-        ───────────────────────────────────────────────────── */}
-
-        <div className="text-center mt-12">
-          <p className="text-[10px] text-neutral-600 uppercase tracking-[0.25em]">
-            Cape Town CBD · Long Street Atelier · By Appointment
-          </p>
-        </div>
+        </motion.div>
       </div>
-    </main>
+    </div>
   );
 }
+
