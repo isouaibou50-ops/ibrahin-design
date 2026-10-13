@@ -1,4 +1,6 @@
+
 "use client";
+
 import { trackWhatsAppConversion } from "@/utils/analytics";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
@@ -13,213 +15,111 @@ import {
 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
-// SERVICES DATA
+// SERVICES DATA (Optimized with Local Cape Town Search Keywords)
 // ─────────────────────────────────────────────────────────────
 
 const SERVICES_DATA = [
   {
-    id: "general-repairs",
-    category: "repairs",
-    title: "General Repairs",
-    tagline:
-      "Professional garment repairs carefully executed to restore everyday pieces to their best condition.",
-    price: "Request a Quote",
-    timeframe: "Tailored to the repair",
-    features: [
-      "Garment damage assessment",
-      "Professional stitching repairs",
-      "Seam and fastening repairs",
-      "Careful finishing and inspection",
-    ],
-    icon: Scissors,
-    gradient: "from-amber-500/20 via-orange-600/5 to-transparent",
-  },
-  {
-    id: "invisible-seams",
-    category: "repairs",
-    title: "Invisible Seams",
-    tagline:
-      "Discreet seam repairs designed to preserve the original appearance and finish of your garment.",
-    price: "Request a Quote",
-    timeframe: "Precision Finish",
-    features: [
-      "Discreet seam restoration",
-      "Minimal visible stitching",
-      "Matching thread selection",
-      "Detailed finishing",
-    ],
-    icon: Sparkles,
-    gradient: "from-violet-500/20 via-fuchsia-600/5 to-transparent",
-  },
-  {
-    id: "childrens-alterations",
-    category: "alterations",
-    title: "Children's Clothing Alterations",
-    tagline:
-      "Careful alterations for children's garments, ensuring comfortable fits without compromising the original design.",
-    price: "Request a Quote",
-    timeframe: "Garment Dependent",
-    features: [
-      "Size adjustments",
-      "Length alterations",
-      "Waist adjustments",
-      "Repairs and garment refinements",
-    ],
-    icon: Shirt,
-    gradient: "from-blue-500/20 via-cyan-600/5 to-transparent",
-  },
-  {
-    id: "leather-repair",
-    category: "repairs",
-    title: "Leather Repair",
-    tagline:
-      "Specialised repair work for leather garments and pieces requiring careful handling and durable finishing.",
-    price: "Request a Quote",
-    timeframe: "Assessment Required",
-    features: [
-      "Leather damage assessment",
-      "Seam and stitching repairs",
-      "Structural repairs",
-      "Careful finishing",
-    ],
-    icon: Scissors,
-    gradient: "from-stone-500/20 via-neutral-600/5 to-transparent",
-  },
-  {
-    id: "mens-alterations",
-    category: "alterations",
-    title: "Men's Clothing Alterations",
-    tagline:
-      "Precision alterations for men's garments, from everyday clothing to formalwear.",
-    price: "Request a Quote",
-    timeframe: "Garment Dependent",
-    features: [
-      "Fit and silhouette adjustments",
-      "Sleeve and length alterations",
-      "Waist adjustments",
-      "Professional finishing",
-    ],
-    icon: Ruler,
-    gradient: "from-slate-500/20 via-blue-600/5 to-transparent",
-  },
-  {
-    id: "trouser-alterations",
-    category: "alterations",
-    title: "Trouser Alterations",
-    tagline:
-      "Precision trouser adjustments designed to achieve a clean, comfortable and balanced fit.",
-    price: "Request a Quote",
-    timeframe: "Garment Dependent",
-    features: [
-      "Trouser length adjustments",
-      "Waist adjustments",
-      "Leg tapering",
-      "Seat and fit refinements",
-    ],
-    icon: Ruler,
-    gradient: "from-emerald-500/20 via-teal-600/5 to-transparent",
-  },
-  {
-    id: "shirt-tailoring",
-    category: "tailoring",
-    title: "Shirt Tailoring",
-    tagline:
-      "Custom shirt tailoring and precision adjustments created around your preferred fit and style.",
-    price: "Request a Quote",
-    timeframe: "Consultation Required",
-    features: [
-      "Custom fit adjustments",
-      "Sleeve alterations",
-      "Collar refinements",
-      "Professional tailored finishing",
-    ],
-    icon: Shirt,
-    gradient: "from-cyan-500/20 via-sky-600/5 to-transparent",
-  },
-  {
     id: "suit-tailoring",
     category: "tailoring",
-    title: "Suit Tailoring",
+    title: "Bespoke Suit Tailoring",
     tagline:
-      "Expert suit tailoring and alterations designed to create a refined, confident and balanced silhouette.",
+      "Expert custom suit tailoring and precise alterations designed around your silhouette by Cape Town's premier artisans.",
     price: "Request a Quote",
     timeframe: "Consultation Required",
     features: [
-      "Jacket fit adjustments",
-      "Trouser alterations",
-      "Sleeve and length adjustments",
-      "Complete suit fitting",
+      "Premium custom suit tailoring",
+      "Jacket fit and shoulder adjustments",
+      "Trouser alterations & leg tapering",
+      "Complete bespoke suit fitting",
     ],
     icon: Ruler,
     gradient: "from-amber-500/20 via-yellow-600/5 to-transparent",
   },
   {
-    id: "uniform-tailoring",
+    id: "traditional-wear",
     category: "tailoring",
-    title: "Uniform Tailoring",
+    title: "Traditional African Wear & Agbadas",
     tagline:
-      "Professional uniform tailoring and alterations for a consistent, comfortable and polished fit.",
+      "Custom traditional wear design specializing in Ankara prints, custom Shweshwe dresses, and bespoke Agbadas.",
     price: "Request a Quote",
-    timeframe: "Order Dependent",
+    timeframe: "Fast Turnaround",
     features: [
-      "Uniform sizing adjustments",
-      "Professional fitting",
-      "Length and waist alterations",
-      "Bulk tailoring available",
+      "Custom traditional dresses & shirts",
+      "Ankara, Shweshwe & Kente custom styling",
+      "Bespoke Agbada and Yoruba cap design",
+      "On-the-spot material co-designing",
     ],
     icon: Shirt,
-    gradient: "from-indigo-500/20 via-blue-600/5 to-transparent",
+    gradient: "from-orange-500/20 via-red-600/5 to-transparent",
   },
   {
-    id: "waist-adjustments",
-    category: "alterations",
-    title: "Waist Adjustments",
+    id: "general-repairs",
+    category: "repairs",
+    title: "Clothing Alterations & Repairs",
     tagline:
-      "Precise waist alterations that improve comfort and create a more natural garment fit.",
+      "Professional garment repairs and same-day clothing alterations carefully executed in Cape Town CBD.",
     price: "Request a Quote",
-    timeframe: "Garment Dependent",
+    timeframe: "Same-Day Options Available",
     features: [
-      "Waist tightening",
-      "Waist loosening",
-      "Fit assessment",
-      "Clean internal finishing",
+      "Precision pants & jeans hemming",
+      "Zipper replacement and jacket repair",
+      "Seam structural reinforcement",
+      "Careful structural dress hemming",
+    ],
+    icon: Scissors,
+    gradient: "from-amber-500/20 via-orange-600/5 to-transparent",
+  },
+  {
+    id: "trouser-alterations",
+    category: "alterations",
+    title: "Trouser & Suit Alterations",
+    tagline:
+      "Precision trouser adjustments designed to achieve a clean, comfortable, and balanced fit.",
+    price: "Request a Quote",
+    timeframe: "12 to 24 Hour Turnaround",
+    features: [
+      "Trouser length & waist adjustments",
+      "Seat and fit refinements",
+      "Leg tapering & narrowing",
+      "Fast, high-quality finishing",
     ],
     icon: Ruler,
-    gradient: "from-rose-500/20 via-pink-600/5 to-transparent",
+    gradient: "from-emerald-500/20 via-teal-600/5 to-transparent",
   },
   {
     id: "wedding-dress-alterations",
     category: "bridal",
     title: "Wedding Dress Alterations",
     tagline:
-      "Delicate bridal alterations performed with attention to fit, detail and the character of the original gown.",
+      "Delicate bridal alterations performed with supreme attention to fit, detail, and the character of your gown.",
     price: "Consultation Required",
     timeframe: "Appointment Required",
     features: [
       "Bridal fitting consultations",
-      "Length and silhouette adjustments",
-      "Bodice and waist alterations",
-      "Delicate detailing and finishing",
+      "Length, bust, and silhouette adjustments",
+      "Bodice adjustments & delicate lace work",
+      "Maid of honor & bridesmaid tailoring",
     ],
     icon: Sparkles,
     gradient: "from-pink-500/20 via-rose-600/5 to-transparent",
   },
   {
-    id: "womens-alterations",
-    category: "alterations",
-    title: "Women's Clothing Alterations",
+    id: "invisible-seams",
+    category: "repairs",
+    title: "Invisible Seam Work",
     tagline:
-      "Thoughtful alterations for women's garments, from everyday pieces to special occasion wear.",
+      "Discreet seam restorations designed to preserve the original retail appearance of your finest garments.",
     price: "Request a Quote",
-    timeframe: "Garment Dependent",
+    timeframe: "Precision Finish",
     features: [
-      "Fit and silhouette adjustments",
-      "Length alterations",
-      "Waist and seam adjustments",
-      "Professional finishing",
+      "Discreet structural restoration",
+      "Minimal visible stitching lines",
+      "Exact matching thread selection",
+      "High-end luxury fabric handling",
     ],
-    icon: Scissors,
-    gradient: "from-fuchsia-500/20 via-purple-600/5 to-transparent",
+    icon: Sparkles,
+    gradient: "from-violet-500/20 via-fuchsia-600/5 to-transparent",
   },
 ];
 
@@ -236,46 +136,43 @@ const CATEGORIES = [
 ];
 
 // ─────────────────────────────────────────────────────────────
-// WHATSAPP HELPER
+// WHATSAPP CONFIGURATION
 // ─────────────────────────────────────────────────────────────
 
 const WHATSAPP_NUMBER = "27837212432";
 
-
-
-// 2. Update your openWhatsApp function to look exactly like this:
 function openWhatsApp(serviceTitle) {
   const message = serviceTitle
     ? `Hello Ibrahim Design, I am on your website and would like to book an appointment or request a quote for: ${serviceTitle}.`
     : "Hello Ibrahim Design, I am on your website and would like to inquire about your tailoring and alteration services.";
 
-  // Execute Google Ads conversion script safely on client interaction
-  trackWhatsAppConversion(serviceTitle || "Main Chat Floating Widget");
+  if (typeof trackWhatsAppConversion === "function") {
+    trackWhatsAppConversion(serviceTitle || "Main Mobile Sticky Tracker");
+  }
 
-  const url = `https://wa.me{WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  // FIXED: Added missing '$' for correct variable parsing
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
-
 // ─────────────────────────────────────────────────────────────
-// MAIN PAGE RENDERING
+// MAIN PAGE RENDERING COMPONENT
 // ─────────────────────────────────────────────────────────────
 
 export default function ServicesPage() {
   const [activeTab, setActiveTab] = useState("all");
 
   const filteredServices = SERVICES_DATA.filter(
-    (service) => activeTab === "all" || service.category === activeTab
+    (service) =>
+      activeTab === "all" || service.category === activeTab
   );
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#050507] px-4 py-24 select-none sm:px-6 lg:px-8">
+    <div className="relative min-h-screen overflow-hidden bg-[#050507] px-4 py-24 select-none pb-32 sm:px-6 md:pb-24 lg:px-8">
       {/* Background Interactive Ambient Overlay */}
       <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-full max-w-7xl -translate-x-1/2">
         <div className="absolute left-10 top-10 h-72 w-72 rounded-full bg-[#c9a35a]/5 blur-[100px]" />
-
         <div className="absolute right-10 top-1/3 h-96 w-96 rounded-full bg-violet-600/5 blur-[120px]" />
-
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
@@ -310,9 +207,9 @@ export default function ServicesPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mx-auto max-w-2xl text-xs font-light leading-relaxed text-neutral-400 sm:text-sm"
           >
-            Welcome to Ibrahim Design. Tap any atelier service below to connect
-            with us directly on WhatsApp for real-time answers, instant quotes,
-            or custom fittings in Cape Town CBD.
+            Welcome to Ibrahim Design. Tap any atelier service below to
+            connect with us directly on WhatsApp for real-time answers,
+            instant quotes, or custom fittings in Cape Town CBD.
           </motion.p>
         </div>
 
@@ -324,7 +221,9 @@ export default function ServicesPage() {
             return (
               <button
                 key={cat.id}
+                type="button"
                 onClick={() => setActiveTab(cat.id)}
+                aria-pressed={isActive}
                 className={`relative cursor-pointer rounded-lg px-4 py-2 text-xs font-medium uppercase tracking-wide transition-all duration-300 ${
                   isActive
                     ? "font-semibold text-black"
@@ -367,73 +266,68 @@ export default function ServicesPage() {
                 key={service.id}
                 className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/5 bg-[#0b0b0f] p-6 transition-all duration-300 hover:border-[#c9a35a]/30 hover:shadow-2xl hover:shadow-[#c9a35a]/5 sm:p-8"
               >
-                {/* Hover Gradient */}
+                {/* Service Card Gradient */}
                 <div
                   className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
                 />
 
-                {/* Content */}
                 <div className="relative z-10">
-                  {/* Top Meta */}
-                  <div className="mb-6 flex items-center justify-between gap-4">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#c9a35a]/20 bg-[#c9a35a]/5 text-[#c9a35a]">
-                      <IconComponent size={20} strokeWidth={1.5} />
+                  {/* Service Icon and Pricing */}
+                  <div className="mb-6 flex items-start justify-between gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#c9a35a]/20 bg-[#c9a35a]/10 text-[#c9a35a]">
+                      <IconComponent size={22} strokeWidth={1.5} />
                     </div>
 
                     <div className="text-right">
-                      <p className="text-[10px] font-semibold uppercase tracking-widest text-[#c9a35a]">
+                      <span className="inline-block rounded-full border border-[#c9a35a]/20 bg-[#c9a35a]/5 px-3 py-1 text-[10px] font-medium text-[#c9a35a]">
                         {service.price}
-                      </p>
+                      </span>
 
-                      <p className="mt-1 text-[10px] uppercase tracking-wide text-neutral-500">
+                      <p className="mt-2 text-[10px] text-neutral-500">
                         {service.timeframe}
                       </p>
                     </div>
                   </div>
 
-                  {/* Title */}
-                  <h2 className="mb-3 text-xl font-medium tracking-tight text-white sm:text-2xl">
+                  {/* Service Details */}
+                  <h2 className="mb-3 font-serif text-xl font-medium text-white sm:text-2xl">
                     {service.title}
                   </h2>
 
-                  {/* Tagline */}
-                  <p className="mb-6 text-sm font-light leading-relaxed text-neutral-400">
+                  <p className="mb-6 text-sm leading-relaxed text-neutral-400">
                     {service.tagline}
                   </p>
 
-                  {/* Features */}
-                  <div className="space-y-3">
+                  {/* Service Features */}
+                  <div className="mb-8 space-y-3">
                     {service.features.map((feat, idx) => (
                       <div
                         key={`${service.id}-feature-${idx}`}
                         className="flex items-start gap-3 text-xs text-neutral-300"
                       >
-                        <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#c9a35a]/10 text-[#c9a35a]">
-                          <Check size={10} strokeWidth={2.5} />
-                        </span>
-
+                        <Check
+                          size={15}
+                          className="mt-0.5 shrink-0 text-[#c9a35a]"
+                        />
                         <span>{feat}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* WhatsApp CTA */}
-                <div className="relative z-10 mt-8">
-                  <button
-                    onClick={() => openWhatsApp(service.title)}
-                    className="group/btn flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-600/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-emerald-400 shadow-md transition-all duration-300 hover:bg-emerald-600 hover:text-white"
-                  >
-                    <PhoneCall size={14} />
-
-                    <span>Discuss on WhatsApp</span>
-
-                    <ChevronRight
-                      size={14}
-                      className="transition-transform duration-300 group-hover/btn:translate-x-1"
-                    />
-                  </button>
-                </div>
+                {/* Service WhatsApp CTA */}
+                <button
+                  type="button"
+                  onClick={() => openWhatsApp(service.title)}
+                  className="group/btn relative z-10 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-600/10 px-4 py-3 text-xs font-semibold uppercase tracking-wider text-emerald-400 shadow-md transition-all duration-300 hover:bg-emerald-600 hover:text-white"
+                >
+                  <PhoneCall size={15} />
+                  Discuss on WhatsApp
+                  <ChevronRight
+                    size={15}
+                    className="transition-transform duration-300 group-hover/btn:translate-x-1"
+                  />
+                </button>
               </motion.div>
             );
           })}
@@ -445,41 +339,73 @@ export default function ServicesPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-2xl border border-[#c9a35a]/20 bg-[#0b0b0f] p-8 text-center sm:p-12"
+          className="relative mb-12 overflow-hidden rounded-2xl border border-[#c9a35a]/20 bg-[#0b0b0f] p-8 text-center sm:p-12"
         >
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#c9a35a]/10 via-transparent to-emerald-500/5" />
+          <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#c9a35a]/5 blur-[80px]" />
 
           <div className="relative z-10">
-            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#c9a35a]/20 bg-[#c9a35a]/5 text-[#c9a35a]">
-              <Scissors size={20} />
+            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#c9a35a]/20 bg-[#c9a35a]/10 text-[#c9a35a]">
+              <Scissors size={25} strokeWidth={1.5} />
             </div>
 
-            <h2 className="mb-4 font-serif text-2xl text-white sm:text-3xl">
+            <h2 className="mb-4 font-serif text-2xl font-medium text-white sm:text-3xl">
               Have a Specific Garment Request?
             </h2>
 
-            <p className="mx-auto mb-8 max-w-2xl text-sm font-light leading-relaxed text-neutral-400">
+            <p className="mx-auto mb-8 max-w-2xl text-sm leading-relaxed text-neutral-400">
               Connect instantly with our master tailors. We specialize in
-              custom African heritage cuts, fine suit restructuring, and fast
-              same-day corrections right here at Greenmarket Square.
+              custom African heritage cuts, fine suit restructuring, and
+              fast same-day corrections right here at Greenmarket Square.
             </p>
 
             <button
+              type="button"
               onClick={() => openWhatsApp(null)}
               className="mx-auto flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-emerald-600 px-8 py-3 text-xs font-semibold uppercase tracking-widest text-white shadow-xl shadow-emerald-950/20 transition-all duration-200 hover:bg-emerald-500 sm:w-auto"
             >
-              <PhoneCall size={14} />
+              <PhoneCall size={16} />
               Start Main WhatsApp Booking
+              <ChevronRight size={16} />
             </button>
 
-            <div className="mt-8 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.2em] text-neutral-500">
-              <PhoneCall size={12} />
-              Direct Studio Line
+            <div className="mt-8 flex flex-col items-center justify-center gap-2 text-xs text-neutral-500 sm:flex-row sm:gap-3">
+              <PhoneCall size={14} className="text-[#c9a35a]" />
+              <span>Direct Studio Line</span>
+              <a
+                href="tel:+27837212432"
+                className="font-medium text-neutral-300 transition-colors hover:text-[#c9a35a]"
+              >
+                +27 83 721 2432
+              </a>
             </div>
           </div>
         </motion.div>
       </div>
+
+      {/* FIXED MOBILE STICKY FOOTER */}
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[#08080b]/95 px-4 py-3 shadow-[0_-10px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl md:hidden">
+        <div className="mx-auto flex max-w-lg items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-white">
+              Ibrahim Design
+            </p>
+            <p className="text-[10px] text-neutral-400">
+              Instant Booking & Quotes
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() =>
+              openWhatsApp("your services")
+            }
+            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg shadow-emerald-950/40 transition-transform active:scale-95"
+          >
+            <PhoneCall size={15} />
+            Chat on WhatsApp
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
-

@@ -1,5 +1,6 @@
 // app/layout.jsx
 import React from "react";
+import Script from "next/script";
 import { Inter, Playfair_Display, Cormorant_Garamond } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import WhatsAppWidget from "@/components/WhatsAppWidget"; 
@@ -52,6 +53,7 @@ export const metadata = {
     "clothing alterations near me",
     "dress alterations near me",
     "tailor near me",
+    "tailme",
     "alterations near me",
     "tailor made suits near me",
     "same day tailor near me",
@@ -136,6 +138,23 @@ export default function RootLayout({ children }) {
   return (
     <ClerkProvider appearance={{ colorPrimary: "#D4AF37" }}>
       <html lang="en" className="scroll-smooth">
+        <head>
+        {/* Load Google Tag (gtag.js) asynchronously via Next.js Script Optimization */}
+        <Script
+          src="https://googletagmanager.com"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            // FIXED: Configured with your real account tracker value
+            gtag('config', 'AW-17657264064'); 
+          `}
+        </Script>
+      </head>
         <body
           className={`
             ${inter.variable}
