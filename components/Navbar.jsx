@@ -10,6 +10,7 @@ import { useAppContext } from "@/context/AppContext";
 const navLinks = [
   { label: "HOME", href: "/" },
   { label: "ABOUT", href: "/about" },
+   { label: "SERVICES", href: "/services" },
   { label: "SHOP", href: "/all-shop-products" },
   { label: "ALTERATIONS", href: "/alterations-and-repairs" },
   { label: "CONTACT", href: "/contact" },
