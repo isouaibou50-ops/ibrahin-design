@@ -134,27 +134,29 @@ export const metadata = {
   },
 };
 
+
+
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider appearance={{ colorPrimary: "#D4AF37" }}>
       <html lang="en" className="scroll-smooth">
         <head>
-        {/* Load Google Tag (gtag.js) asynchronously via Next.js Script Optimization */}
-        <Script
-          src="https://googletagmanager.com"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
+          {/* FIXED: Pointing directly to the complete verified script asset path */}
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=AW-17657264064"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics-init" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
 
-            // FIXED: Configured with your real account tracker value
-            gtag('config', 'AW-17657264064'); 
-          `}
-        </Script>
-      </head>
+              // Configured with your real account tracker value
+              gtag('config', 'AW-17657264064'); 
+            `}
+          </Script>
+        </head>
         <body
           className={`
             ${inter.variable}
@@ -169,7 +171,9 @@ export default function RootLayout({ children }) {
             relative
           `}
         >
-           <GoogleAdsScript />
+          {/* COMMENTED OUT DUPLICATE TRACKER TO PREVENT CONFLICTS */}
+          {/* <GoogleAdsScript /> */}
+          
           {/* Ambient Futuristic Background Mesh */}
           <div className="fixed inset-0 -z-50 overflow-hidden pointer-events-none">
             <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vh] rounded-full bg-amber-500/5 blur-[100px]" />
