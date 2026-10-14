@@ -60,6 +60,8 @@ export const metadata = {
     "clothing alterations near me",
     "dress alterations near me",
     "tailor near me",
+    "tailor in long street",
+     "xhosa traditional dress",
     "tailme",
     "alterations near me",
     "tailor made suits near me",
