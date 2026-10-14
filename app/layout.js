@@ -46,6 +46,13 @@ export const metadata = {
   description:
     "Premium bespoke suits, luxury African traditional wear, custom boubous, wedding dress tailoring, and professional clothing alterations on Long Street, Cape Town CBD. Perfect fit guaranteed.",
   keywords: [
+    "Men's African Suit",
+    "Embroidered",
+    "Senator Suit",
+    "Modern Dashiki",
+    "Kaftan Set",
+    "2-Piece",
+    "Bespoke African Wear, Traditional Wear Men, Two-Piece Set",
     "best tailor in cape town",
     "suit alterations cape town",
     "bespoke tailor cape town",
