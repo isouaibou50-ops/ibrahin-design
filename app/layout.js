@@ -5,7 +5,7 @@ import { Inter, Playfair_Display, Cormorant_Garamond } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import WhatsAppWidget from "@/components/WhatsAppWidget"; 
 import "./globals.css";
-import GoogleAdsScript from "@/components/GoogleAdsScript";
+
 
 // 1. Clean, Single Font Declarations
 const inter = Inter({
