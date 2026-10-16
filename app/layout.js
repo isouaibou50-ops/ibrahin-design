@@ -6,7 +6,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import WhatsAppWidget from "@/components/WhatsAppWidget"; 
 import "./globals.css";
 
-
 // 1. Clean, Single Font Declarations
 const inter = Inter({
   subsets: ["latin"],
@@ -37,82 +36,14 @@ export const viewport = {
   maximumScale: 5,
 };
 
-// 3. Campaign-Optimised Advanced SEO & Target Keywords Matching
+// 3. Campaign-Optimised Advanced SEO Configuration
 export const metadata = {
   title: {
     default: "Ibrahim Design | Best Tailor Shop in Cape Town CBD",
     template: "%s | Ibrahim Design Cape Town",
   },
   description:
-    "Premium bespoke suits, luxury African traditional wear, custom boubous, wedding dress tailoring, and professional clothing alterations on Long Street, Cape Town CBD. Perfect fit guaranteed.",
-  keywords: [
-    "Men's African Suit",
-    "Embroidered",
-    "Senator Suit",
-    "Modern Dashiki",
-    "Kaftan Set",
-    "2-Piece",
-    "Bespoke African Wear, Traditional Wear Men, Two-Piece Set",
-    "best tailor in cape town",
-    "suit alterations cape town",
-    "bespoke tailor cape town",
-    "wedding dress alterations",
-    "clothing alterations near me",
-    "dress alterations near me",
-    "tailor near me",
-    "tailor in long street",
-     "xhosa traditional dress",
-    "tailme",
-    "alterations near me",
-    "tailor made suits near me",
-    "same day tailor near me",
-    "seamstress near me",
-    "mens tailor near me",
-    "bespoke suits near me",
-    "bespoke tailor near me",
-    "tux fitting near me",
-    "custom dress shirts near me",
-    "tailor shop near me",
-    "wedding dress alterations near me",
-    "suit makers near me",
-    "dress tailor near me",
-    "dress hemming near me",
-    "best tailors near me",
-    "custom tailor near me",
-    "blouse stitching near me",
-    "dressmaker near me",
-    "zipper repair near me",
-    "curtain alterations near me",
-    "tailor made suits cape town",
-    "jacket repair near me",
-    "custom suits near me",
-    "suit tailor near me",
-    "seamstress cape town",
-    "made to measure suits near me",
-    "dress alterations cape town",
-    "ladies tailor near me",
-    "suit fitting near me",
-    "custom tuxedo near me",
-    "custom suits cape town",
-    "dress makers near me",
-    "custom men's suits near me",
-    "tailor cape town cbd",
-    "dressmakers cape town",
-    "uniform tailoring cape town",
-    "traditional wear designers cape town",
-    "custom traditional dresses cape town",
-    "kente bow tie cape town",
-    "tailor long street",
-    "suit tailoring cape town cbd",
-    "clothing alterations long street",
-    "custom suits cape town cbd",
-    "african print shirts custom",
-    "clothing repair cape town",
-    "pants hemming cape town cbd",
-    "african traditional wear tailor cape town",
-    "custom shweshwe dresses",
-    "african design tailor long street"
-  ],
+    "Premium bespoke suits, luxury African traditional wear, custom boubous, wedding dress tailoring, and professional clothing alterations at Market House, Green Market Square, Cape Town CBD. Perfect fit guaranteed.",
   metadataBase: new URL("https://ibrahimdesign.co.za"),
   alternates: {
     canonical: "/",
@@ -124,7 +55,7 @@ export const metadata = {
   },
   openGraph: {
     title: "Ibrahim Design | Bespoke Tailor Shop Cape Town CBD",
-    description: "Bespoke African fashion, custom suits, wedding gowns, and expert clothing alterations on Long Street.",
+    description: "Bespoke African fashion, custom suits, wedding gowns, and expert clothing alterations at Market House, Green Market Square.",
     url: "https://ibrahimdesign.co.za",
     siteName: "Ibrahim Design",
     locale: "en_ZA",
@@ -143,16 +74,61 @@ export const metadata = {
   },
 };
 
-
-
 export default function RootLayout({ children }) {
+  // 4. Local Business Schema Data to force Map and Local Search Dominance
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Ibrahim Design",
+    "image": "https://ibrahimdesign.co.za",
+    "@id": "https://ibrahimdesign.co.za",
+    "url": "https://ibrahimdesign.co.za",
+    "telephone": "+27837212432",
+    "priceRange": "\$\$\$",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Shop 5, Market House, Green Market Square",
+      "addressLocality": "Cape Town City Centre",
+      "postalCode": "8001",
+      "addressCountry": "ZA"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -33.9231, // Precise coordinates matching Market House at Greenmarket Square
+      "longitude": 18.4201
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "08:00",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
+        "opens": "08:30",
+        "closes": "17:30"
+      }
+    ],
+    "sameAs": [
+      "https://instagram.com",
+      "https://facebook.com"
+    ],
+    "keywords": "tailor cape town cbd, custom suits cape town, african traditional wear tailor cape town, alterations near me, dressmaker cape town"
+  };
+
   return (
     <ClerkProvider appearance={{ colorPrimary: "#D4AF37" }}>
       <html lang="en" className="scroll-smooth">
         <head>
-          {/* FIXED: Pointing directly to the complete verified script asset path */}
+          {/* Injection of the structured data payload */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
           <Script
-            src="https://www.googletagmanager.com/gtag/js?id=AW-17657264064"
+            src="https://googletagmanager.com"
             strategy="afterInteractive"
           />
           <Script id="google-analytics-init" strategy="afterInteractive">
@@ -160,8 +136,6 @@ export default function RootLayout({ children }) {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-
-              // Configured with your real account tracker value
               gtag('config', 'AW-17657264064'); 
             `}
           </Script>
@@ -180,9 +154,6 @@ export default function RootLayout({ children }) {
             relative
           `}
         >
-          {/* COMMENTED OUT DUPLICATE TRACKER TO PREVENT CONFLICTS */}
-          {/* <GoogleAdsScript /> */}
-          
           {/* Ambient Futuristic Background Mesh */}
           <div className="fixed inset-0 -z-50 overflow-hidden pointer-events-none">
             <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vh] rounded-full bg-amber-500/5 blur-[100px]" />
